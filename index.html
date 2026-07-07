@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1d4670" />
+<meta name="description" content="In Piazza — cucina di mare a Porto Venere. Antipasti, primi, secondi e dolci freschi del giorno." />
+<title>In Piazza · Cucina di mare</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   IN PIAZZA — cucina di mare · single file
+   Mobile-first. Header sticky che collassa allo scroll.
+   ============================================================ */
+
+/* ---------- Design tokens ---------- */
+:root{
+  --navy:        #1d4670;
+  --navy-deep:   #163659;
+  --ink:         #355980;
+  --ink-soft:    #6d88a3;
+
+  --gold:        #d4af37;
+  --gold-line:   #c8a13a;
+  --gold-deep:   #9c7a22;
+  --pill-bg:     #f3e8cd;
+  --pill-br:     rgba(176,141,42,.55);
+
+  --bg-base:     #FCF8F3;   /* crema uniforme: stesso colore di fondo delle immagini piatti */
+  --bg-top:      #e7eef1;
+  --bg-bottom:   #FCF8F3;
+  --line:        rgba(29,70,112,.12);
+
+  --plate-1:     #f1f1ef;
+  --plate-2:     #d9dad6;
+  --plate-3:     #cccdc8;
+
+  --shadow:      rgba(22,54,90,.20);
+  --shadow-soft: rgba(22,54,90,.12);
+
+  --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --app-max:   480px;
+  --pad:       24px;
+
+  /* Piatti */
+  --plate-bleed: 8px;   /* quanto il piatto sborda oltre il bordo schermo */
+  --col-gap:     16px;  /* spazio centrale tra le due colonne */
+  --stack-gap:   30px;  /* spazio verticale tra gli elementi di una colonna */
+
+  /* Header */
+  --hero-exp:  300px;   /* altezza hero espanso */
+  --hero-cmp:  62px;    /* altezza hero compatto */
+  --stick-h:   120px;   /* altezza header compatto (aggiornata da JS) */
+  --ease:      cubic-bezier(.4,0,.2,1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; overflow-anchor:none; }
+/* overflow-anchor:none -> il browser NON riaggiusta lo scroll quando l'header
+   collassa: senza questo lo scroll-anchoring innesca un ping-pong (flicker)
+   tra stato compatto ed espanso. È la chiave per uno scroll-driven fluido. */
+html{ -webkit-text-size-adjust:100%; }
+
+body{
+  margin:0;
+  font-family:var(--sans);
+  color:var(--ink);
+  background:#dfe2dc;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  display:flex; justify-content:center;
+}
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; cursor:pointer; border:0; background:none; }
+img{ max-width:100%; display:block; }
+
+.app{
+  position:relative;
+  width:100%;
+  max-width:var(--app-max);
+  min-height:100vh;
+  /* NIENTE overflow:hidden qui: renderebbe .app uno scroll-container,
+     rompendo position:sticky dell'header e deviando lo scrollIntoView. */
+  background-color:var(--bg-base);
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/></svg>");
+  box-shadow:0 0 80px rgba(0,0,0,.18);
+}
+
+/* ============================================================
+   HEADER STICKY (espanso -> compatto)
+   ============================================================ */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  transition:box-shadow .35s var(--ease);
+}
+.site-header.is-compact{ box-shadow:0 14px 28px -20px var(--shadow); }
+
+/* --- HERO (parte che collassa — scroll-driven via --scroll-p) --- */
+.header__hero{
+  position:relative; overflow:hidden;
+  height:calc(var(--hero-exp) - (var(--hero-exp) - var(--hero-cmp))*var(--scroll-p,0));
+  display:flex; align-items:center; justify-content:center;
+  color:var(--navy); text-align:center;
+  /* no height transition: è lo scroll a pilotare */
+}
+
+/* sfondo banner Porto Venere (placeholder) — per la foto reale:
+   .hero__bg{ background-image:url('assets/porto-venere.jpg'); background-size:cover; background-position:center bottom; } */
+.hero__bg{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,#bcd6e6 0%, #cfe0e8 38%, #e3eae6 72%, var(--bg-bottom) 100%);
+  transition:background .8s ease;
+}
+.site-header[data-cat="dolci"]     .hero__bg{ background:linear-gradient(180deg,#e9d8c2,#f0e6d6 38%,#f2ebe0 72%,var(--bg-bottom)); }
+.site-header[data-cat="antipasti"] .hero__bg{ background:linear-gradient(180deg,#c2d9e7,#d4e2e9 38%,#e6ece7 72%,var(--bg-bottom)); }
+.site-header[data-cat="primi"]     .hero__bg{ background:linear-gradient(180deg,#b2cee0,#c8dbe5 38%,#e0e9e6 72%,var(--bg-bottom)); }
+.site-header[data-cat="secondi"]   .hero__bg{ background:linear-gradient(180deg,#e2cfb0,#ecdfc8 38%,#eee6d6 72%,var(--bg-bottom)); }
+/* sole */
+.hero__bg::before{
+  content:""; position:absolute; left:18%; top:28%;
+  width:84px; height:84px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,247,224,.9), rgba(255,247,224,0) 70%);
+  opacity:calc(1 - var(--scroll-p,0));        /* il sole svanisce col collasso (scroll-driven) */
+}
+/* skyline acquerello in basso */
+.hero__bg::after{
+  content:""; position:absolute; left:-4%; right:-4%; bottom:0; height:42%;
+  background:
+    radial-gradient(26% 120% at 10% 100%, rgba(29,70,112,.55), transparent 60%),
+    radial-gradient(16% 90%  at 24% 100%, rgba(29,70,112,.42), transparent 64%),
+    radial-gradient(12% 70%  at 38% 100%, rgba(29,70,112,.38), transparent 66%),
+    radial-gradient(22% 130% at 80% 100%, rgba(29,70,112,.55), transparent 60%),
+    radial-gradient(14% 90%  at 94% 100%, rgba(29,70,112,.45), transparent 64%);
+  opacity:calc(.5*(1 - var(--scroll-p,0)));   /* lo skyline svanisce col collasso (scroll-driven) */
+}
+
+/* hamburger: PERSISTENTE in entrambi gli stati (navigazione del sito multi-pagina,
+   accesso via QR ai tavoli). Ancorato in alto a sinistra, alto quanto la barra
+   compatta: resta fermo e allineato mentre il logo si rimpicciolisce e sale
+   attorno ad esso -> transizione fluida, nessuno scatto. */
+.hamburger{
+  position:absolute; top:0; left:var(--pad); height:var(--hero-cmp); z-index:5;
+  display:grid; align-content:center; gap:5px; padding:0 9px; width:42px;
+  border-radius:12px;
+  transition:background .3s ease;
+}
+.hamburger:hover{ background:rgba(255,255,255,.25); }
+.hamburger span{
+  display:block; height:2px; border-radius:2px; background:var(--navy);
+  filter:drop-shadow(0 1px 1px rgba(255,255,255,.55));   /* contrasto premium anche su foto */
+}
+
+/* logo */
+/* logo — tutte le proprietà scroll-driven via --scroll-p (0=espanso, 1=compatto) */
+.logo{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:calc(2px*(1 - var(--scroll-p,0))); color:var(--navy); user-select:none; }
+.logo__crown{ width:96px; height:auto; overflow:hidden;
+  margin-bottom:calc(4px*(1 - var(--scroll-p,0)));
+  max-height:calc(40px*(1 - var(--scroll-p,0)));
+  opacity:calc(1 - var(--scroll-p,0)*2); }
+.logo__fish{ width:158px; height:auto; overflow:hidden;
+  margin-top:calc(6px*(1 - var(--scroll-p,0)));
+  max-height:calc(48px*(1 - var(--scroll-p,0)));
+  opacity:calc(1 - var(--scroll-p,0)*2); }
+.logo__word{
+  font-family:var(--serif); font-style:italic; font-weight:600;
+  /* interpolazione 2.4rem → 1.45rem nel range di scroll */
+  font-size:calc(2.4rem - 0.95rem*var(--scroll-p,0)); line-height:1; letter-spacing:.01em;
+}
+
+/* --- TABS (dentro l'header, sempre visibili) --- */
+.tabs{
+  position:relative; display:flex; align-items:stretch; padding:0 4px;
+  background:rgba(243,243,237,.88);
+  backdrop-filter:saturate(150%) blur(10px);
+  -webkit-backdrop-filter:saturate(150%) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.tab{
+  flex:1 1 0; text-align:center;
+  font:600 clamp(10px,3.1vw,12px)/1 var(--sans);
+  letter-spacing:.2em; text-transform:uppercase; color:var(--navy);
+  padding:18px 2px; opacity:.55;
+  transition:color .25s ease, opacity .25s ease;
+}
+.tab:hover{ opacity:.85; }
+.tab.is-active{ color:var(--gold-line); opacity:1; }
+.tabs__ink{
+  position:absolute; left:0; bottom:-1px; height:2.5px; width:0;
+  background:linear-gradient(90deg,var(--gold-line),var(--gold));
+  border-radius:3px; box-shadow:0 0 8px rgba(212,175,55,.5);
+  transform:translateX(0);
+  transition:transform .4s var(--ease), width .4s var(--ease);
+  pointer-events:none;
+}
+
+/* ============================================================
+   CATEGORIE & PIATTI
+   ============================================================ */
+/* overflow-x:clip (NON hidden) lascia sbordare i piatti oltre il bordo senza
+   scroll laterale; clip non crea uno scroll-container -> sticky header salvo. */
+main{ overflow-x:clip; }
+.category{ padding:40px var(--pad) 34px; scroll-margin-top:var(--stick-h); }
+.dish-block{
+  margin:0 calc(-1*var(--pad));
+  padding:0 var(--pad);
+  background-size:100% auto;
+  background-position:top center;
+  background-repeat:no-repeat;
+}
+.category[data-cat="antipasti"]{
+  background-image:url('image/bg-antipasti.webp');
+  background-size:100% auto;
+  background-position:top center;
+  background-repeat:no-repeat;
+}
+.category[data-cat="primi"]{
+  background-image:url('image/bg-primi.webp');
+  background-size:100% auto;
+  background-position:top center;
+  background-repeat:no-repeat;
+  padding-bottom:0;
+}
+.category[data-cat="secondi"]{
+  background-image:url('image/bg-secondi.webp');
+  background-size:100% auto;
+  background-position:top center;
+  background-repeat:no-repeat;
+  padding-top:20px;
+}
+.primi-cta{
+  position:relative; z-index:2;
+  margin-top:-178px;
+  display:flex; justify-content:center;
+  padding-bottom:0;
+}
+.fade-to-secondi{
+  position:relative;
+  left:calc(-1*var(--pad));
+  width:calc(100% + 2*var(--pad));
+  height:110px;
+  background:linear-gradient(180deg, rgba(253,249,245,0) 0%, #F9F5F0 100%);
+}
+.btn-chisiamo{
+  position:relative;
+  width:78%;
+  padding:18px 0;
+  background:transparent;
+  border:none;
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:clamp(1.15rem,5.2vw,1.45rem);
+  letter-spacing:.1em;
+  cursor:pointer;
+  /* il testo riceve un "glint" dorato che lo attraversa: navy di base, banda oro che scorre */
+  text-align:center;
+  background-image:linear-gradient(105deg,
+    var(--navy) 0%, var(--navy) 40%,
+    var(--gold) 50%,
+    var(--navy) 60%, var(--navy) 100%);
+  background-size:230% auto;
+  background-position:200% 0;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  animation:chisiamo-glint 3s linear infinite;
+  transition:transform .15s ease;
+}
+.btn-chisiamo:active{ transform:scale(.97); }
+@keyframes chisiamo-glint{
+  0%  { background-position:200% 0; }
+  100%{ background-position:-100% 0; }
+}
+.category[data-cat="antipasti"] .dish-block[data-block-idx="1"]{ background-image:url('image/bg-antipasti2.webp'); background-size:100% auto; background-position:top center; padding-bottom:220px; }
+.category[data-cat="primi"]     .dish-block[data-block-idx="1"]{ background-color:var(--bg-base); background-image:url('image/bg-primi2.webp'); background-size:100% auto; background-position:center 380px; padding-bottom:520px; }
+.category[data-cat="secondi"]   .dish-block[data-block-idx="0"]{ background-image:url('image/bg-secondi.webp'); background-position:center -171px; }
+.category[data-cat="secondi"]   .dish-block[data-block-idx="1"]{ background-image:url('image/bg-secondi2.webp'); background-size:100% auto; background-position:top center; background-repeat:no-repeat; overflow:hidden; margin-top:-43px; padding-top:43px; padding-bottom:64px; }
+.category[data-cat="secondi"] .separator{ display:none; }
+.category[data-cat="dolci"]{
+  background-image:url('image/bg-dolci.webp');
+  background-size:100% auto;
+  background-position:bottom center;
+  background-repeat:no-repeat;
+  padding-bottom:200px;
+}
+#dolci + .separator{ display:none; }
+
+.cat-head{ position:relative; margin-bottom:26px; }
+.cat-title{ font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:clamp(2.2rem,10vw,2.9rem); line-height:1; color:var(--navy); margin:0; }
+.cat-wave{ display:block; width:48px; height:9px; color:var(--gold-line); margin:14px 0; }
+.cat-sub{ margin:0; font-size:14px; font-weight:300; line-height:1.6; color:var(--ink); }
+.cat-doodle{ position:absolute; top:6px; right:0; width:60px; height:22px; color:var(--navy); opacity:.5; }
+
+/* LAYOUT MASONRY a 2 colonne sfalsate (il "vecchio design" preferito da Paolo).
+   Le colonne impilano elementi SEPARATI (foto e testo) alternati e sfalsati:
+   la SX parte con una FOTO, la DX con un TESTO -> in alto vedi foto+testo (mai
+   due piatti affiancati). Le foto sono grandi e sbordano; il ritmo è fitto e
+   NON uniforme perché foto/testi hanno altezze diverse. Colonne indipendenti
+   => nessuna collisione anche con testi lunghi. */
+.dishes{ display:flex; align-items:flex-start; gap:var(--col-gap); }
+.dishes__col{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:var(--stack-gap); }
+.dishes__col--right{ margin-top:24px; }   /* sfasamento -> avvia lo zig-zag */
+
+/* la foto sborda oltre il bordo, dal lato esterno della colonna */
+.plate-block{ margin:0; width:calc(100% + var(--pad) + var(--plate-bleed)); }
+.plate-block--left{ align-self:flex-end; }     /* eccede a sinistra (fuori schermo) */
+.plate-block--right{ align-self:flex-start; }  /* eccede a destra (fuori schermo) */
+.text-block{ align-self:stretch; }             /* il testo resta dentro la colonna */
+
+/* testo del piatto: nome + ingredienti SEMPRE visibili (più gerarchia, pagina piena) */
+.dish__name{ font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:clamp(1.2rem,5.4vw,1.5rem); line-height:1.14; color:var(--navy); margin:0 0 8px; }
+.dish__desc{ margin:0; font-size:13px; font-weight:300; line-height:1.55; color:var(--ink); }
+
+.plate{
+  position:relative; aspect-ratio:1/1; border-radius:50%; overflow:hidden;
+  display:grid; place-items:center;
+  background:radial-gradient(130% 130% at 32% 26%, var(--plate-1) 0%, var(--plate-2) 58%, var(--plate-3) 100%);
+  box-shadow:
+    0 34px 54px -26px rgba(22,54,90,.32),   /* ombra ampia e morbida, integrata nel fondo */
+    0 10px 22px -12px rgba(22,54,90,.14),    /* contatto più vicino */
+    inset 0 2px 6px rgba(255,255,255,.85),   /* luce sul bordo superiore */
+    inset 0 -18px 34px rgba(22,54,90,.10);   /* incavo interno del piatto */
+  transition:transform .4s ease, box-shadow .4s ease;
+}
+.plate::before{ content:""; position:absolute; inset:10%; border-radius:50%; box-shadow:inset 0 0 0 1px rgba(22,54,90,.07); }
+.plate__label{ font:600 9px/1.5 var(--sans); letter-spacing:.16em; text-transform:uppercase; color:#9a9c9c; text-align:center; padding:0 14%; }
+.plate-block:hover .plate{ transform:translateY(-4px) scale(1.02); box-shadow:0 42px 66px -28px rgba(22,54,90,.36), 0 12px 24px -12px rgba(22,54,90,.16), inset 0 2px 6px rgba(255,255,255,.9), inset 0 -18px 34px rgba(22,54,90,.1); }
+
+/* ============================================================
+   SEPARATORE — onde full-width
+   ============================================================ */
+.separator{ position:relative; height:128px; overflow:hidden;
+  background:linear-gradient(180deg, var(--bg-bottom) 0%, #dbe7ee 45%, #cfe0ea 100%); }
+.separator__waves{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+/* divisorio a onde DENTRO la categoria (ogni 5 piatti) — sborda a tutta larghezza */
+.separator--inline{ height:104px; margin:32px calc(-1*var(--pad)); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer{ text-align:center; color:var(--navy); padding:42px var(--pad) 52px; }
+.footer__fish{ width:84px; height:auto; margin:0 auto 12px; color:var(--navy); }
+.footer__name{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:1.7rem; margin:0 0 8px; }
+.footer__line{ margin:3px 0; font-size:12px; font-weight:300; letter-spacing:.02em; color:var(--ink); }
+.footer__social{ display:flex; justify-content:center; gap:14px; margin-top:18px; }
+.social-dot{ width:38px; height:38px; border-radius:50%; display:grid; place-items:center; border:1.5px solid var(--navy); color:var(--navy); font-size:14px; }
+
+/* ============================================================
+   OVERLAY MENU
+   ============================================================ */
+.menu-overlay{
+  position:fixed; inset:0; left:0; right:0; margin-inline:auto; max-width:var(--app-max);
+  z-index:100; display:flex; flex-direction:column; align-items:center;
+  padding:18px var(--pad) 26px;
+  color:var(--navy);
+  background:transparent;        /* lo sfondo lo "versa" la wave-curtain (acquerello chiaro) */
+  overflow:hidden;               /* taglia la coda d'onda fuori schermo */
+  pointer-events:none;           /* chiuso: non intercetta i tocchi */
+}
+body.menu-open{ overflow:hidden; }
+body.menu-open .menu-overlay{ pointer-events:auto; }
+
+/* ---- TENDA D'ONDA: acquerello CHIARO che cala dall'alto (azzurro -> crema) ---- */
+.wave-curtain{
+  position:absolute; left:0; top:0; width:100%; height:100%;
+  background:linear-gradient(180deg,
+    #74aed0 0%, #9ec6de 8%, #c7dce9 20%, #e6ece9 36%, var(--bg-bottom) 58%);
+  transform:translateY(calc(-100% - 170px));   /* nascosta sopra, coda inclusa */
+  transition:transform .60s cubic-bezier(.6,0,.35,1);   /* CHIUSURA: marea che si ritira */
+  will-change:transform;
+}
+.menu-overlay > .wave-curtain{ position:absolute; z-index:0; }   /* dietro ai contenuti (vince su `.menu-overlay > *`) */
+body.menu-open .wave-curtain{
+  transform:translateY(0);
+  transition:transform .85s cubic-bezier(.25,1,.5,1);   /* APERTURA: scatto + decelerazione (ease-out quint), un filo più lenta */
+}
+/* bordo d'onda REALISTICO: creste multiple sovrapposte (chiara -> profonda) + schiuma */
+.wave-curtain__edge{ position:absolute; top:100%; left:0; width:100%; height:170px; display:block; }
+.wave-back{  fill:#bcd8e8; }     /* acqua chiara, vicino al corpo crema */
+.wave-mid{   fill:#7fb1d2; }     /* acqua media */
+.wave-front{ fill:#5491c0; }     /* fronte d'acqua più profondo */
+.wave-foam{  fill:none; stroke:rgba(255,255,255,.85); stroke-width:3; }  /* schiuma sulla cresta */
+
+/* ---- SKYLINE acquerello di Porto Venere (in basso) ---- */
+.menu-overlay__skyline{
+  position:absolute; left:0; right:0; bottom:0; height:34%;
+  opacity:0; transition:opacity .7s ease;     /* compare quando l'onda è passata */
+}
+.menu-overlay > .menu-overlay__skyline{ position:absolute; z-index:0; }  /* sopra la tenda, sotto i contenuti */
+body.menu-open .menu-overlay__skyline{ opacity:1; transition-delay:.32s; }
+.menu-overlay__skyline svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+.menu-overlay > *{ position:relative; z-index:1; }
+.menu-overlay__bar{ width:100%; display:flex; align-items:center; justify-content:space-between; }
+.overlay-close{ width:42px; height:42px; font-size:26px; line-height:1; color:var(--navy); }
+.btn-prenota{ font:600 11px/1 var(--sans); letter-spacing:.18em; color:var(--navy); border:1.5px solid var(--navy); border-radius:999px; padding:9px 16px; background:rgba(255,255,255,.4); transition:background .25s ease, color .25s ease; }
+.btn-prenota:hover{ background:var(--navy); color:#fff; }
+.logo--ov{ margin-top:6px; color:var(--navy); }
+.logo--ov .logo__crown{ width:78px; }
+.logo--ov .logo__word{ font-size:2rem; }
+.logo--ov .logo__fish{ width:120px; }
+.menu-overlay__nav{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px; padding:22px 0; }
+.ov-link{ font:600 16px/1 var(--sans); letter-spacing:.22em; text-transform:uppercase; color:var(--navy); transition:color .2s ease; }
+.ov-link:hover,.ov-link--gold{ color:var(--gold-line); }
+.ov-sub{ font-family:var(--serif); font-style:italic; color:var(--gold-line); font-size:17px; margin-top:-4px; }
+.cat-wave--ov{ color:var(--gold); width:42px; }
+.menu-overlay__social{ display:flex; gap:16px; }
+
+/* ---- rivelazione coreografata dei contenuti (stagger DOPO il passaggio dell'onda) ---- */
+.menu-overlay__bar,
+.menu-overlay .logo--ov,
+.menu-overlay__nav > *,
+.menu-overlay__social{
+  opacity:0; transform:translateY(18px);
+  transition:opacity .5s ease, transform .55s cubic-bezier(.25,1,.5,1);
+}
+body.menu-open .menu-overlay__bar{ opacity:1; transform:none; transition-delay:.28s; }
+body.menu-open .menu-overlay .logo--ov{ opacity:1; transform:none; transition-delay:.34s; }
+body.menu-open .menu-overlay__nav > *{ opacity:1; transform:none; }
+body.menu-open .menu-overlay__nav > *:nth-child(1){ transition-delay:.42s; }
+body.menu-open .menu-overlay__nav > *:nth-child(2){ transition-delay:.46s; }
+body.menu-open .menu-overlay__nav > *:nth-child(3){ transition-delay:.50s; }
+body.menu-open .menu-overlay__nav > *:nth-child(4){ transition-delay:.54s; }
+body.menu-open .menu-overlay__nav > *:nth-child(5){ transition-delay:.58s; }
+body.menu-open .menu-overlay__nav > *:nth-child(6){ transition-delay:.62s; }
+body.menu-open .menu-overlay__nav > *:nth-child(7){ transition-delay:.66s; }
+body.menu-open .menu-overlay__nav > *:nth-child(8){ transition-delay:.70s; }
+body.menu-open .menu-overlay__nav > *:nth-child(9){ transition-delay:.74s; }
+body.menu-open .menu-overlay__social{ opacity:1; transform:none; transition-delay:.78s; }
+
+/* ============================================================
+   Reveal animato (solo se JS attivo)
+   ============================================================ */
+.js .plate-block, .js .text-block, .js .cat-head{ opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+.js .plate-block.in-view, .js .text-block.in-view, .js .cat-head.in-view{ opacity:1; transform:none; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto !important; }
+  /* animazioni legate allo SCROLL (involontarie): disattivate, i contenuti compaiono subito */
+  .js .plate-block, .js .text-block, .js .cat-head{ opacity:1 !important; transform:none !important; transition:none !important; }
+  /* il menu è un'azione VOLONTARIA (tap): l'onda resta — solo un filo più rapida e sobria */
+  .wave-curtain{ transition-duration:.5s !important; }                  /* chiusura: marea che si ritira */
+  body.menu-open .wave-curtain{ transition-duration:.62s !important; } /* apertura: un filo più lenta */
+}
+@media (max-width:340px){ :root{ --pad:16px; } }
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- ===== HEADER STICKY (collassa allo scroll) ===== -->
+  <header class="site-header" id="header" data-cat="antipasti">
+    <div class="header__hero">
+      <div class="hero__bg" aria-hidden="true"></div>
+
+      <button class="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="overlay-menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="logo" role="img" aria-label="In Piazza">
+        <svg class="logo__crown" viewBox="0 0 110 34" fill="none" aria-hidden="true">
+          <path d="M14 32 V11 H28 V5 H38 V11 H52 V5 H62 V11 H76 V5 H86 V11 H96 V32" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        <span class="logo__word">In Piazza</span>
+        <svg class="logo__fish" viewBox="0 0 168 40" fill="none" aria-hidden="true">
+          <path d="M6 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M48 22 L40 15 L44 22 L40 29 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M48 22 Q70 9 96 22 Q70 35 48 22 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="86" cy="19" r="1.6" fill="currentColor"/>
+          <path d="M96 22 Q108 22 130 22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M130 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <nav class="tabs" id="tabs" aria-label="Categorie del menu">
+      <a class="tab is-active" href="#antipasti" data-target="antipasti">Antipasti</a>
+      <a class="tab"           href="#primi"     data-target="primi">Primi</a>
+      <a class="tab"           href="#secondi"   data-target="secondi">Secondi</a>
+      <a class="tab"           href="#dolci"     data-target="dolci">Dolci</a>
+      <span class="tabs__ink" aria-hidden="true"></span>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ---------- ANTIPASTI ---------- -->
+    <section id="antipasti" class="category" data-cat="antipasti" aria-labelledby="t-anti">
+      <div class="cat-head">
+        <h2 id="t-anti" class="cat-title">Antipasti</h2>
+        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p class="cat-sub">Il nostro inizio di mare:<br/>fresco, leggero, autentico.</p>
+        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="dish-list" data-cat="antipasti"></div>
+    </section>
+
+    <div class="separator" aria-hidden="true">
+      <svg class="separator__waves" viewBox="0 0 390 128" preserveAspectRatio="none">
+        <path d="M0 58 C70 34 130 78 200 60 C275 41 330 76 390 56 L390 128 L0 128 Z" fill="#b9d2e4"/>
+        <path d="M0 78 C80 56 140 96 215 78 C300 57 345 92 390 76 L390 128 L0 128 Z" fill="#6fa1c6" opacity=".55"/>
+        <path d="M0 96 C70 78 150 112 220 96 C300 78 350 108 390 94 L390 128 L0 128 Z" fill="#1d4670" opacity=".9"/>
+      </svg>
+    </div>
+
+    <!-- ---------- PRIMI ---------- -->
+    <section id="primi" class="category" data-cat="primi" aria-labelledby="t-primi">
+      <div class="cat-head">
+        <h2 id="t-primi" class="cat-title">Primi</h2>
+        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p class="cat-sub">La tradizione di mare<br/>che profuma di Mediterraneo.</p>
+        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="dish-list" data-cat="primi"></div>
+      <div class="primi-cta">
+        <button class="btn-chisiamo">Chi Siamo</button>
+      </div>
+      <div class="fade-to-secondi" aria-hidden="true"></div>
+    </section>
+
+    <!-- ---------- SECONDI ---------- -->
+    <section id="secondi" class="category" data-cat="secondi" aria-labelledby="t-sec">
+      <div class="cat-head">
+        <h2 id="t-sec" class="cat-title">Secondi</h2>
+        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p class="cat-sub">Il pescato che diventa piatto:<br/>schietto e generoso.</p>
+        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="dish-list" data-cat="secondi"></div>
+    </section>
+
+    <div class="separator" aria-hidden="true" style="margin-top:15px">
+      <svg class="separator__waves" viewBox="0 0 390 128" preserveAspectRatio="none">
+        <path d="M0 58 C70 34 130 78 200 60 C275 41 330 76 390 56 L390 128 L0 128 Z" fill="#b9d2e4"/>
+        <path d="M0 78 C80 56 140 96 215 78 C300 57 345 92 390 76 L390 128 L0 128 Z" fill="#6fa1c6" opacity=".55"/>
+        <path d="M0 96 C70 78 150 112 220 96 C300 78 350 108 390 94 L390 128 L0 128 Z" fill="#1d4670" opacity=".9"/>
+      </svg>
+    </div>
+
+    <!-- ---------- DOLCI ---------- -->
+    <section id="dolci" class="category" data-cat="dolci" aria-labelledby="t-dolci">
+      <div class="cat-head">
+        <h2 id="t-dolci" class="cat-title">Dolci</h2>
+        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p class="cat-sub">La dolcezza per chiudere:<br/>classici e tentazioni del giorno.</p>
+        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="dish-list" data-cat="dolci"></div>
+    </section>
+
+    <div class="separator" aria-hidden="true">
+      <svg class="separator__waves" viewBox="0 0 390 128" preserveAspectRatio="none">
+        <path d="M0 58 C70 34 130 78 200 60 C275 41 330 76 390 56 L390 128 L0 128 Z" fill="#b9d2e4"/>
+        <path d="M0 78 C80 56 140 96 215 78 C300 57 345 92 390 76 L390 128 L0 128 Z" fill="#6fa1c6" opacity=".55"/>
+        <path d="M0 96 C70 78 150 112 220 96 C300 78 350 108 390 94 L390 128 L0 128 Z" fill="#1d4670" opacity=".9"/>
+      </svg>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer" id="prenota">
+      <svg class="footer__fish" viewBox="0 0 96 30" fill="none" aria-hidden="true">
+        <path d="M30 15 L22 8 L26 15 L22 22 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M30 15 Q48 4 72 15 Q48 26 30 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="63" cy="12.5" r="1.4" fill="currentColor"/>
+      </svg>
+      <p class="footer__name">In Piazza</p>
+      <p class="footer__line">Calata Doria, 1 · Porto Venere (SP)</p>
+      <p class="footer__line">Aperto tutti i giorni · 12:00 – 23:00</p>
+      <div class="footer__social" aria-hidden="true">
+        <span class="social-dot">f</span><span class="social-dot">◎</span><span class="social-dot">✆</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ===== OVERLAY MENU ===== -->
+  <div class="menu-overlay" id="overlay-menu" aria-hidden="true" inert>
+    <div class="wave-curtain" aria-hidden="true">
+      <svg class="wave-curtain__edge" viewBox="0 0 1440 170" preserveAspectRatio="none">
+        <path class="wave-front" d="M0,0 H1440 V104 C1250,158 1040,74 840,110 C660,142 360,70 0,108 Z"/>
+        <path class="wave-mid"   d="M0,0 H1440 V76 C1240,128 1020,58 800,88 C600,116 320,52 0,82 Z"/>
+        <path class="wave-back"  d="M0,0 H1440 V50 C1250,96 1030,38 820,64 C620,88 300,34 0,56 Z"/>
+        <path class="wave-foam"  d="M1440,104 C1250,158 1040,74 840,110 C660,142 360,70 0,108"/>
+      </svg>
+    </div>
+
+    <div class="menu-overlay__skyline" aria-hidden="true">
+      <svg viewBox="0 0 390 250" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="ovSea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#a9cce2"/>
+            <stop offset="1" stop-color="#d6e4ef"/>
+          </linearGradient>
+        </defs>
+        <circle cx="102" cy="168" r="30" fill="#f1d6a0" opacity=".8"/>
+        <g fill="none" stroke="#1d4670" stroke-width="2.4" stroke-linecap="round" opacity=".5">
+          <path d="M42,100 q7,-7 14,0 q7,7 14,0"/>
+          <path d="M300,66 q7,-7 14,0 q7,7 14,0"/>
+          <path d="M338,86 q5,-5 10,0 q5,5 10,0"/>
+        </g>
+        <path d="M0,168 Q90,150 190,164 Q280,154 390,166 L390,168 Z" fill="#6f93b4" opacity=".4"/>
+        <g fill="#1d4670">
+          <path d="M14,168 V140 H20 V134 H28 V140 H36 V134 H44 V140 H52 V120 H68 V140 H76 V134 H82 V140 H88 V168 Z"/>
+          <path d="M118,168 V150 H136 V156 H156 V145 H180 V153 H198 V168 Z"/>
+          <path d="M284,168 V128 H298 V96 L307,87 L316,96 V128 H330 V120 Q347,100 364,120 V128 H374 V168 Z"/>
+        </g>
+        <rect x="0" y="168" width="390" height="82" fill="url(#ovSea)"/>
+        <rect x="94" y="168" width="16" height="52" fill="#f1d6a0" opacity=".22"/>
+        <g fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".5">
+          <path d="M28,192 q18,-4 36,0 t36,0"/>
+          <path d="M236,206 q20,-4 40,0 t40,0"/>
+          <path d="M120,222 q16,-3 32,0 t32,0"/>
+        </g>
+      </svg>
+    </div>
+    <div class="menu-overlay__bar">
+      <button class="overlay-close" type="button" aria-label="Chiudi il menu">&times;</button>
+      <a class="btn-prenota" href="#prenota">PRENOTA</a>
+    </div>
+    <div class="logo logo--ov" role="img" aria-label="In Piazza">
+      <svg class="logo__crown" viewBox="0 0 110 34" fill="none" aria-hidden="true">
+        <path d="M14 32 V11 H28 V5 H38 V11 H52 V5 H62 V11 H76 V5 H86 V11 H96 V32" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <span class="logo__word">In Piazza</span>
+      <svg class="logo__fish" viewBox="0 0 168 40" fill="none" aria-hidden="true">
+        <path d="M6 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M48 22 L40 15 L44 22 L40 29 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M48 22 Q70 9 96 22 Q70 35 48 22 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        <circle cx="86" cy="19" r="1.6" fill="currentColor"/>
+        <path d="M96 22 Q108 22 130 22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M130 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <nav class="menu-overlay__nav" aria-label="Navigazione principale">
+      <a href="#header" class="ov-link">Home</a>
+      <svg class="cat-wave cat-wave--ov" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <a href="#prenota" class="ov-link">Dove siamo</a>
+      <svg class="cat-wave cat-wave--ov" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <a href="#header" class="ov-link ov-link--gold">Galleria</a>
+      <svg class="cat-wave cat-wave--ov" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <a href="#header" class="ov-link">Chi siamo</a>
+      <span class="ov-sub">La nostra cucina di mare</span>
+      <a href="#antipasti" class="ov-link">Menu</a>
+    </nav>
+    <div class="menu-overlay__social" aria-hidden="true">
+      <span class="social-dot">f</span><span class="social-dot">◎</span><span class="social-dot">✆</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   IN PIAZZA — comportamenti
+   - Menu data-driven: i piatti vivono in MENU, il layout (blocchi masonry +
+     divisori a onde ogni 5 piatti) è calcolato -> scalabile.
+   - Accordion ingredienti (chevron + pannello a comparsa)
+   - Header sticky che collassa (espanso <-> compatto)
+   - Scroll-spy con underline animato + sfondo hero per categoria
+   - Reveal animato + overlay menu
+   ============================================================ */
+(function(){
+  'use strict';
+  document.documentElement.classList.add('js');
+
+  /* ---------- DATI MENU ----------
+     n = nome del piatto · d = ingredienti/note (parentesi) -> finiscono
+     nell'accordion. Senza "d" il piatto non ha freccetta.
+     Per cambiare il menu basta editare questi array: blocchi e divisori
+     si ricalcolano da soli. */
+  var MENU = {
+    antipasti: [
+      { n:"Covaccino stracchino e pesto di Portovenere" },
+      { n:"Frittelle di gianchetti" },
+      { n:"Muscoli ripieni", d:"Antica ricetta di Portovenere." },
+      { n:"Impepata di cozze" },
+      { n:"Spadellata di mare per 2 persone", d:"Cozze, vongole veraci, calamari, scampi, mazzancolle, gamberi, cicale." },
+      { n:"Polpo alla ligure", d:"Polpo, patate, fagiolini al vapore, olive taggiasche, pesto di Portovenere." },
+      { n:"Svaporata di mare caldo", d:"Calamari e mazzancolle su letto di verdure." },
+      { n:"Acciughe di Monterosso", d:"Impanate e fritte su letto all'Isolana." },
+      { n:"Gran Catalana di crostacei", d:"Con la sua maionese alla curcuma." }
+    ],
+    primi: [
+      { n:"Linguine Vongole veraci e Bottarga", d:"Bottarga tagliata a coltello." },
+      { n:"Paccheri alla Triglia di scoglio" },
+      { n:"Paccheri Tonno fresco e Pomodorini", d:"Su tartare di tonno crudo." },
+      { n:"Ravioli Pesce spada e Agrumi", d:"Con calamari, bottarga e pomodorini." },
+      { n:"Pansotti Capesante e Gambero Rosa", d:"Su tartare di gambero rosa e basilico." },
+      { n:"Gnocchi alla Bati", d:"Scampi e curry con flambè d'Armagnac." },
+      { n:"Caciucco", d:"Su ordinazione." },
+      { n:"Linguine ai Muscoli" },
+      { n:"Linguine ai Frutti di mare" },
+      { n:"Trofie al Pesto di Portovenere" },
+      { n:"Gran Plateau di spaghetto alla chitarra all'astice", d:"Minimo 2 persone." }
+    ],
+    secondi: [
+      { n:"Gran Frittura Ligure", d:"Stecco di cozze, acciughe di Monterosso impanate, sarde, acciughe, triglie, San Pietro, calamari, gamberi, patate fritte." },
+      { n:"Gran Grigliata di Pescato", d:"Tonno, gambero rosa, mazzancola, calamari su letto di verdure." },
+      { n:"Grigliata di Calamari" },
+      { n:"Grigliata di Mazzancolle" },
+      { n:"Tagliata di Tonno alla Ligure" },
+      { n:"Polpo alla Diavola" },
+      { n:"Pesce al Forno", d:"In base al pescato." }
+    ],
+    dolci: [
+      { n:"Sorbetto Limone / Mela / Mandarino" },
+      { n:"Crema Catalana flambè" },
+      { n:"Flan al Cioccolato con cuore caldo" },
+      { n:"Gelato alla Crema dei Medici con frutti di bosco freschi" },
+      { n:"Dolci del giorno" }
+    ]
+  };
+
+  var DISHES_PER_BLOCK = 5;   /* ogni quanti piatti spunta un divisorio a onde */
+  var BLOCK_SIZES = { secondi: 4 };
+
+  function esc(s){
+    return String(s).replace(/[&<>"]/g, function(c){
+      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c];
+    });
+  }
+
+  /* foto (placeholder) — elemento a sé, sborda dal lato esterno della colonna */
+  function plateHTML(side){
+    return '<div class="plate-block plate-block--'+side+'"><div class="plate"><span class="plate__label">Foto piatto</span></div></div>';
+  }
+
+  /* testo del piatto — nome + ingredienti SEMPRE visibili (niente accordion) */
+  function textHTML(d){
+    var html = '<article class="text-block dish"><h3 class="dish__name">'+esc(d.n)+'</h3>';
+    if(d.d){ html += '<p class="dish__desc">'+esc(d.d)+'</p>'; }
+    return html + '</article>';
+  }
+
+  /* divisorio a onde (riusa il separatore già presente) */
+  function inlineSeparatorHTML(){
+    return '<div class="separator separator--inline" aria-hidden="true">'
+      + '<svg class="separator__waves" viewBox="0 0 390 128" preserveAspectRatio="none">'
+      +   '<path d="M0 58 C70 34 130 78 200 60 C275 41 330 76 390 56 L390 128 L0 128 Z" fill="#b9d2e4"/>'
+      +   '<path d="M0 78 C80 56 140 96 215 78 C300 57 345 92 390 76 L390 128 L0 128 Z" fill="#6fa1c6" opacity=".55"/>'
+      +   '<path d="M0 96 C70 78 150 112 220 96 C300 78 350 108 390 94 L390 128 L0 128 Z" fill="#1d4670" opacity=".9"/>'
+      + '</svg></div>';
+  }
+
+  /* spezza in blocchi da DISHES_PER_BLOCK; se l'ULTIMO blocco resterebbe di 1
+     piatto (orfano), lo accorpa al precedente -> niente divisorio incollato
+     a quello di fine categoria (es. 11 -> [5,6], non [5,5,1]). */
+  function chunk(arr, catId){
+    var size = (BLOCK_SIZES[catId] !== undefined) ? BLOCK_SIZES[catId] : DISHES_PER_BLOCK;
+    var blocks = [];
+    for(var i=0; i<arr.length; i+=size){ blocks.push(arr.slice(i, i+size)); }
+    if(blocks.length > 1 && blocks[blocks.length-1].length < 2){
+      var orphan = blocks.pop();
+      blocks[blocks.length-1] = blocks[blocks.length-1].concat(orphan);
+    }
+    return blocks;
+  }
+
+  /* un blocco -> masonry a 2 colonne, ESATTAMENTE 1 foto per piatto, con la foto
+     SEMPRE di FRONTE (colonna opposta) al titolo — mai sotto nella stessa colonna:
+       • indice locale PARI    -> foto a SINISTRA, testo a DESTRA
+       • indice locale DISPARI -> testo a SINISTRA, foto a DESTRA (specchiato)
+     Le colonne restano bilanciate (stesso n. di elementi) e #foto == #piatti. */
+  function blockHTML(dishes){
+    var left = [], right = [];
+    dishes.forEach(function(d, i){
+      if(i % 2 === 0){ left.push(plateHTML('left'));  right.push(textHTML(d)); }
+      else           { left.push(textHTML(d));        right.push(plateHTML('right')); }
+    });
+    return '<div class="dishes">'
+      + '<div class="dishes__col dishes__col--left">'  + left.join('')  + '</div>'
+      + '<div class="dishes__col dishes__col--right">' + right.join('') + '</div>'
+      + '</div>';
+  }
+
+  function renderCategory(catId){
+    var host = document.querySelector('.dish-list[data-cat="'+catId+'"]');
+    var data = MENU[catId];
+    if(!host || !data) return;
+    var blocks = chunk(data, catId);
+    var html = '';
+    blocks.forEach(function(b, idx){
+      html += '<div class="dish-block" data-block-idx="'+idx+'">';
+      html += blockHTML(b);
+      html += '</div>';
+      if(idx < blocks.length - 1){ html += inlineSeparatorHTML(); }
+    });
+    host.innerHTML = html;
+  }
+
+  Object.keys(MENU).forEach(renderCategory);   /* popola tutte le categorie PRIMA di osservare/misurare */
+
+  var HERO_CMP     = 62;                   /* deve combaciare con --hero-cmp */
+  var SCROLL_RANGE = 180;                  /* px su cui avviene il collasso: più ampio = più graduale */
+  var header   = document.getElementById('header');
+  var tabsNav  = document.getElementById('tabs');
+  var tabs     = Array.prototype.slice.call(tabsNav.querySelectorAll('.tab'));
+  var ink      = tabsNav.querySelector('.tabs__ink');
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.category'));
+  var current  = null;
+
+  /* altezza header compatto -> scroll-margin delle sezioni (req. #3: niente clip) */
+  function setSizes(){
+    document.documentElement.style.setProperty('--stick-h', (HERO_CMP + tabsNav.offsetHeight) + 'px');
+  }
+
+  function updateInk(tab){
+    if(!tab) return;
+    var range = document.createRange();
+    range.selectNodeContents(tab);
+    var r = range.getBoundingClientRect();
+    var base = tabsNav.getBoundingClientRect();
+    ink.style.width = r.width + 'px';
+    ink.style.transform = 'translateX(' + (r.left - base.left) + 'px)';
+  }
+  function activeTabEl(){
+    for(var i=0;i<tabs.length;i++){ if(tabs[i].classList.contains('is-active')) return tabs[i]; }
+    return tabs[0];
+  }
+  function setActive(id){
+    if(id === current) return;
+    current = id;
+    var active = null;
+    tabs.forEach(function(t){
+      var on = t.dataset.target === id;
+      t.classList.toggle('is-active', on);
+      if(on) active = t;
+    });
+    updateInk(active);
+    header.dataset.cat = id;              /* sfondo hero dinamico */
+  }
+
+  function onScroll(){
+    /* 1. header: progress continuo 0→1 lungo SCROLL_RANGE px */
+    var p = Math.min(1, Math.max(0, window.scrollY / SCROLL_RANGE));
+    header.style.setProperty('--scroll-p', p);
+    /* is-compact solo a fine corsa (box-shadow, sole, skyline) */
+    header.classList.toggle('is-compact', p >= 1);
+
+    /* 2. scroll-spy: sezione sotto al bordo inferiore dell'header sticky */
+    var line = window.scrollY + header.getBoundingClientRect().bottom + 16;
+    var id = sections[0].id;
+    for(var i=0;i<sections.length;i++){ if(sections[i].offsetTop <= line) id = sections[i].id; }
+    setActive(id);
+  }
+
+  var ticking = false;
+  function onScrollRaf(){ if(ticking) return; ticking = true; requestAnimationFrame(function(){ onScroll(); ticking = false; }); }
+
+  /* click tab -> scroll fluido (scroll-margin-top fa atterrare sotto l'header compatto) */
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(e){
+      e.preventDefault();
+      var sec = document.getElementById(tab.dataset.target);
+      if(sec) sec.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
+
+  /* reveal */
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in-view'); io.unobserve(en.target); } });
+    }, { rootMargin:'0px 0px -8% 0px', threshold:0.12 });
+    document.querySelectorAll('.plate-block, .text-block, .cat-head').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.plate-block, .text-block, .cat-head').forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  /* overlay */
+  var hamburger = document.querySelector('.hamburger');
+  var closeBtn  = document.querySelector('.overlay-close');
+  var overlay   = document.getElementById('overlay-menu');
+  function openMenu(){ document.body.classList.add('menu-open'); hamburger.setAttribute('aria-expanded','true'); overlay.setAttribute('aria-hidden','false'); overlay.inert = false; }
+  function closeMenu(){ document.body.classList.remove('menu-open'); hamburger.setAttribute('aria-expanded','false'); overlay.setAttribute('aria-hidden','true'); overlay.inert = true; }
+  hamburger.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  overlay.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && document.body.classList.contains('menu-open')) closeMenu(); });
+
+  /* init */
+  window.addEventListener('scroll', onScrollRaf, { passive:true });
+  window.addEventListener('resize', function(){ setSizes(); updateInk(activeTabEl()); });
+  setSizes();
+  requestAnimationFrame(function(){ setSizes(); onScroll(); updateInk(tabs[0]); });
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ setSizes(); updateInk(activeTabEl()); }); }
+})();
+</script>
+</body>
+</html>
