@@ -1,42 +1,65 @@
 # In Piazza — cucina di mare 🐟
 
-Sito **mobile-first** (ottimizzato esclusivamente per smartphone) per il ristorante di pesce *In Piazza*, Porto Venere.
-**Tutto in un unico file** `index.html` (HTML + `<style>` + `<script>` interni): nessuna dipendenza, nessun build, niente file esterni da collegare.
+Sito **responsive** (mobile, tablet e desktop) per il ristorante di pesce *In Piazza*, alle Caldine (Fiesole) — la famiglia è originaria di Porto Venere, da cui arriva la tradizione marinara in cucina.
+
+Tre pagine, ciascuna un file HTML autonomo: **`index.html`** (menu), **`dove-siamo.html`** (indirizzo/contatti), **`chi-siamo.html`** (storia e filosofia). Lo stile e il comportamento condivisi da tutte e tre vivono in due file esterni; ogni pagina aggiunge solo il proprio `<style>`/`<script>` specifico. Nessuna dipendenza, nessun build — solo HTML/CSS/JS.
+
+## Struttura del progetto
+
+```
+index.html          menu (Antipasti · Primi · Secondi · Dolci)
+dove-siamo.html      indirizzo, mappa, contatti
+chi-siamo.html       storia, ambiente, team, filosofia
+
+css/
+  base.css           condiviso da tutte le pagine: design tokens, reset,
+                      guscio ".app", hamburger/logo, footer, overlay menu,
+                      modal recensioni, breakpoint di crescita del layout
+
+js/
+  overlay.js         condiviso da tutte le pagine: hamburger + menu overlay
+                      + modal recensioni (Google/Tripadvisor)
+
+image/
+  sfondi/            illustrazioni a china di sfondo (solo mobile/tablet:
+                      su desktop lasciano il posto a un colore neutro)
+  separatori/        foto panoramiche reali usate come separatori/hero
+```
+
+Ogni pagina ha poi un proprio `<style>` e `<script>` inline per ciò che le è specifico (griglia piatti e scroll-spy in `index.html`, reveal-on-scroll in `chi-siamo.html`, ecc.). Se cambi un colore, un font o il comportamento del menu overlay, modifica **una sola volta** in `css/base.css` / `js/overlay.js`: si applica automaticamente a tutte e tre le pagine.
 
 ## Come vedere il risultato
 
-- **Più semplice:** doppio click su `index.html` → si apre nel browser già stilizzato.
-- **Con server locale** (consigliato, evita limiti di alcuni browser):
+Serve un server locale (i moduli CSS/JS esterni non si caricano da `file://`):
 
 ```bash
 python3 -m http.server 8080      # dalla cartella del progetto
 # poi apri http://localhost:8080
 ```
 
-> 📱 **Vista mobile:** DevTools del browser (F12) → *Toggle device toolbar* (Cmd/Ctrl+Shift+M) → scegli un iPhone.
-> Su schermo largo il sito si mostra comunque come una colonna stile telefono, centrata.
+## Responsive
+
+- **Mobile** (< 768px): layout "vecchio stile" a due colonne indipendenti sfalsate (masonry), pensato e calibrato per lo schermo del telefono.
+- **Tablet** (768–1023px): stesso linguaggio visivo, ma piatto e titolo vengono riallineati riga per riga (niente più deriva indipendente tra le colonne, che a piatti più grandi confonderebbe l'abbinamento).
+- **Desktop** (≥ 1024px, solo `index.html`): sidebar di navigazione fissa al posto delle tab in alto, un piatto per schermata intera, foto a bordo pagina alternata a destra/sinistra. Le altre due pagine (`dove-siamo.html`, `chi-siamo.html`) restano su un impianto più semplice — il contenitore si allarga e i testi restano ancorati a una larghezza comoda da leggere (~1080px), senza sidebar.
+
+In ogni caso: **la versione mobile non viene mai alterata** dalle regole responsive — sono tutte dentro `@media (min-width: …)`, quindi sotto i rispettivi breakpoint il sito è identico a come è stato disegnato in origine.
 
 ## Funzionalità
 
-- **Hero** con logo *In Piazza* (line-art SVG) e sfondo che cambia tinta con la categoria attiva.
-- **Tab bar sticky** (Crudi · Antipasti · Primi · Secondi) con underline dorato animato.
-- **Scroll-spy**: scorrendo il menu la tab attiva si aggiorna da sola.
-- **Layout piatti a zig-zag**: piatto ~40% / testo ~60%, alternati a specchio.
-- **Separatori** a onde a tutta larghezza tra una categoria e l'altra.
-- **Overlay menu** full-screen (hamburger), reveal animato, supporto `prefers-reduced-motion`.
+- **Header sticky che collassa** (solo `index.html`): hero espanso → barra compatta scorrendo, sfondo che cambia tinta con la categoria attiva.
+- **Tab bar / sidebar con scroll-spy**: la voce attiva si aggiorna da sola scorrendo il menu.
+- **Layout piatti a zig-zag**: piatto e testo alternati a specchio, con divisori a onde o foto ogni 5 piatti.
+- **Overlay menu** a tutto schermo (hamburger) con tenda d'onda animata, e **modal recensioni** (Google/Tripadvisor) con vetro smerigliato — entrambi supportano `prefers-reduced-motion`.
 
-## Inserire le immagini reali (placeholder CSS)
+## Inserire le foto reali (placeholder attuali)
 
-Tutto è dentro `index.html`. Cerca questi blocchi nel `<style>`/markup:
-
-| Elemento | Dove | Come |
+| Elemento | Dove | Pagina |
 |---|---|---|
-| Sfondo hero | `.hero__bg` | `background-image:url('assets/porto-venere.jpg'); background-size:cover;` (anche per categoria via `.hero[data-cat="primi"] .hero__bg`) |
-| Piatti | `.plate` | `background-image:url('assets/piatto.jpg'); background-size:cover;` e togli lo `<span class="plate__label">` |
-| Separatori | `.separator` | sostituisci l'`<svg class="separator__waves">` con un'immagine, oppure lascia le onde |
-| Logo | blocco `.logo` | sostituisci gli `<svg>` col logo definitivo |
+| Foto piatto | `.plate` (dentro `.plate-block`) | `index.html` — genera i placeholder via JS, cerca `plateHTML()` |
+| Foto sala/team/locale | `.ph` (placeholder con icona macchina fotografica) | `chi-siamo.html` |
 
-I piatti sono **tutti tondi della stessa dimensione** (grigi), pronti per le foto definitive.
+Le foto vere già inserite (hero, separatori panoramici) sono in `image/separatori/`; gli sfondi illustrati (solo mobile/tablet) sono in `image/sfondi/`.
 
 ## Deploy su GitHub Pages
 

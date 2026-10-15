@@ -1,0 +1,297 @@
+/* ============================================================
+   IN PIAZZA — cucina di mare
+   base.css — stili condivisi da index.html, dove-siamo.html e
+   chi-siamo.html: design tokens, reset, guscio ".app", hamburger/logo
+   (versione statica — index.html aggiunge sopra le proprietà
+   scroll-driven del proprio header), footer, overlay menu, modal
+   recensioni e i breakpoint di crescita del contenitore.
+   Ogni pagina aggiunge poi un proprio <style> con le regole specifiche
+   (header/hero, sezioni, componenti di quella pagina).
+   ============================================================ */
+
+/* ---------- Design tokens ---------- */
+:root{
+  --navy:        #1d4670;
+  --navy-deep:   #163659;
+  --ink:         #355980;
+  --ink-soft:    #6d88a3;
+
+  --gold:        #d4af37;
+  --gold-line:   #c8a13a;
+  --gold-deep:   #9c7a22;
+  --pill-bg:     #f3e8cd;
+  --pill-br:     rgba(176,141,42,.55);
+
+  --bg-base:     #F9F5F1;   /* crema uniforme: sfondo pagina e piatti */
+  --bg-top:      #e7eef1;
+  --bg-bottom:   #F9F5F1;
+  --line:        rgba(29,70,112,.12);
+
+  --plate-1:     #f1f1ef;
+  --plate-2:     #d9dad6;
+  --plate-3:     #cccdc8;
+
+  --shadow:      rgba(22,54,90,.20);
+  --shadow-soft: rgba(22,54,90,.12);
+
+  --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --app-max:   480px;
+  --pad:       24px;
+
+  /* Piatti (usati dalla griglia del menu in index.html) */
+  --plate-bleed: 8px;   /* quanto il piatto sborda oltre il bordo schermo */
+  --col-gap:     20px;  /* spazio centrale tra le due colonne */
+  --stack-gap:   40px;  /* spazio verticale tra gli elementi di una colonna */
+
+  /* Header */
+  --hero-exp:  300px;   /* altezza hero espanso (index.html) */
+  --hero-cmp:  62px;    /* altezza barra compatta/topbar */
+  --stick-h:   120px;   /* altezza header sticky (aggiornata da JS) */
+  --ease:      cubic-bezier(.4,0,.2,1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; overflow-anchor:none; }
+/* overflow-anchor:none -> il browser NON riaggiusta lo scroll quando un
+   header collassa: senza questo lo scroll-anchoring innesca un ping-pong
+   (flicker) tra stato compatto ed espanso. */
+html{ -webkit-text-size-adjust:100%; }
+
+body{
+  margin:0;
+  font-family:var(--sans);
+  color:var(--ink);
+  background:#dfe2dc;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  display:flex; justify-content:center;
+}
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; cursor:pointer; border:0; background:none; }
+img{ max-width:100%; display:block; }
+
+.app{
+  position:relative;
+  width:100%;
+  max-width:var(--app-max);
+  min-height:100vh;
+  /* NIENTE overflow:hidden qui: renderebbe .app uno scroll-container,
+     rompendo position:sticky e deviando lo scrollIntoView. */
+  background-color:var(--bg-base);
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/></svg>");
+  box-shadow:0 0 80px rgba(0,0,0,.18);
+}
+
+/* ---------- Hamburger + logo — versione base statica ----------
+   index.html ridefinisce sopra queste le proprietà scroll-driven
+   (via --scroll-p) del proprio header che collassa. */
+.hamburger{
+  position:absolute; top:0; left:var(--pad); height:var(--hero-cmp); z-index:5;
+  display:grid; align-content:center; gap:5px; padding:0 9px; width:42px;
+  border-radius:12px;
+  transition:background .3s ease;
+}
+.hamburger:hover{ background:rgba(255,255,255,.25); }
+.hamburger span{
+  display:block; height:2px; border-radius:2px; background:var(--navy);
+  filter:drop-shadow(0 1px 1px rgba(255,255,255,.55));   /* contrasto premium anche su foto */
+}
+
+.logo{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:2px; color:var(--navy); user-select:none; }
+.logo__crown{ width:96px; height:auto; }
+.logo__fish{ width:158px; height:auto; }
+.logo__word{
+  font-family:var(--serif); font-style:italic; font-weight:600;
+  font-size:2.4rem; line-height:1; letter-spacing:.01em;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer{ text-align:center; color:var(--navy); padding:42px var(--pad) 52px; }
+.footer__fish{ width:84px; height:auto; margin:0 auto 12px; color:var(--navy); }
+.footer__name{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:1.7rem; margin:0 0 8px; }
+.footer__line{ margin:3px 0; font-size:12px; font-weight:300; letter-spacing:.02em; color:var(--ink); }
+.footer__social{ display:flex; justify-content:center; gap:14px; margin-top:18px; }
+.social-dot{ width:38px; height:38px; border-radius:50%; display:grid; place-items:center; border:1.5px solid var(--navy); color:var(--navy); font-size:14px; }
+
+/* ============================================================
+   OVERLAY MENU — tenda d'onda + navigazione principale del sito
+   (identico su tutte le pagine: Chi siamo, Dove siamo, Menu Galleria,
+   Recensisci, raggiungibile dall'hamburger)
+   ============================================================ */
+.menu-overlay{
+  position:fixed; inset:0; left:0; right:0; margin-inline:auto; max-width:var(--app-max);
+  z-index:100; display:flex; flex-direction:column; align-items:center;
+  padding:18px var(--pad) 26px;
+  color:var(--navy);
+  background:transparent;        /* lo sfondo lo "versa" la wave-curtain (acquerello chiaro) */
+  overflow:hidden;               /* taglia la coda d'onda fuori schermo */
+  pointer-events:none;           /* chiuso: non intercetta i tocchi */
+}
+body.menu-open{ overflow:hidden; }
+body.menu-open .menu-overlay{ pointer-events:auto; }
+
+/* ---- TENDA D'ONDA: acquerello CHIARO che cala dall'alto (azzurro -> crema) ---- */
+.wave-curtain{
+  position:absolute; left:0; top:0; width:100%; height:100%;
+  background:linear-gradient(180deg,
+    #74aed0 0%, #9ec6de 8%, #c7dce9 20%, #e6ece9 36%, var(--bg-bottom) 58%);
+  transform:translateY(calc(-100% - 170px));   /* nascosta sopra, coda inclusa */
+  transition:transform .60s cubic-bezier(.6,0,.35,1);   /* CHIUSURA: marea che si ritira */
+  will-change:transform;
+}
+.menu-overlay > .wave-curtain{ position:absolute; z-index:0; }   /* dietro ai contenuti (vince su `.menu-overlay > *`) */
+body.menu-open .wave-curtain{
+  transform:translateY(0);
+  transition:transform .85s cubic-bezier(.25,1,.5,1);   /* APERTURA: scatto + decelerazione (ease-out quint), un filo più lenta */
+}
+/* bordo d'onda REALISTICO: creste multiple sovrapposte (chiara -> profonda) + schiuma */
+.wave-curtain__edge{ position:absolute; top:100%; left:0; width:100%; height:170px; display:block; }
+.wave-back{  fill:#bcd8e8; }     /* acqua chiara, vicino al corpo crema */
+.wave-mid{   fill:#7fb1d2; }     /* acqua media */
+.wave-front{ fill:#5491c0; }     /* fronte d'acqua più profondo */
+.wave-foam{  fill:none; stroke:rgba(255,255,255,.85); stroke-width:3; }  /* schiuma sulla cresta */
+
+/* ---- SKYLINE acquerello di Porto Venere (in basso) ---- */
+.menu-overlay__skyline{
+  position:absolute; left:0; right:0; bottom:0; height:34%;
+  opacity:0; transition:opacity .7s ease;     /* compare quando l'onda è passata */
+}
+.menu-overlay > .menu-overlay__skyline{ position:absolute; z-index:0; }  /* sopra la tenda, sotto i contenuti */
+body.menu-open .menu-overlay__skyline{ opacity:1; transition-delay:.32s; }
+.menu-overlay__skyline svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+.menu-overlay > *{ position:relative; z-index:1; }
+.menu-overlay__bar{ width:100%; display:flex; align-items:center; justify-content:space-between; }
+.overlay-close{ width:42px; height:42px; font-size:26px; line-height:1; color:var(--navy); }
+.btn-prenota{ font:600 11px/1 var(--sans); letter-spacing:.18em; color:var(--navy); border:1.5px solid var(--navy); border-radius:999px; padding:9px 16px; background:rgba(255,255,255,.4); transition:background .25s ease, color .25s ease; }
+.btn-prenota:hover{ background:var(--navy); color:#fff; }
+.logo--ov{ margin-top:6px; color:var(--navy); }
+.logo--ov .logo__crown{ width:78px; }
+.logo--ov .logo__word{ font-size:2rem; }
+.logo--ov .logo__fish{ width:120px; }
+.menu-overlay__nav{
+  flex:1 1 auto;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:32px;
+  padding:12px 0 8px;
+}
+.ov-link{
+  font:600 18px/1.15 var(--sans);
+  letter-spacing:.20em;
+  text-transform:uppercase;
+  color:var(--navy);
+  padding:10px 22px;
+  transition:color .2s ease;
+}
+.ov-link:hover,.ov-link--gold{ color:var(--gold-line); }
+.ov-link__ico{ width:15px; height:15px; margin-right:8px; vertical-align:-2px; color:var(--gold-line); }
+.menu-overlay__social{ display:flex; gap:16px; margin-top:auto; padding-top:24px; }
+
+/* ---- rivelazione coreografata dei contenuti (stagger DOPO il passaggio dell'onda) ---- */
+.menu-overlay__bar,
+.menu-overlay .logo--ov,
+.menu-overlay__nav > *,
+.menu-overlay__social{
+  opacity:0; transform:translateY(18px);
+  transition:opacity .5s ease, transform .55s cubic-bezier(.25,1,.5,1);
+}
+body.menu-open .menu-overlay__bar{ opacity:1; transform:none; transition-delay:.28s; }
+body.menu-open .menu-overlay .logo--ov{ opacity:1; transform:none; transition-delay:.34s; }
+body.menu-open .menu-overlay__nav > *{ opacity:1; transform:none; }
+body.menu-open .menu-overlay__nav > *:nth-child(1){ transition-delay:.42s; }
+body.menu-open .menu-overlay__nav > *:nth-child(2){ transition-delay:.48s; }
+body.menu-open .menu-overlay__nav > *:nth-child(3){ transition-delay:.54s; }
+body.menu-open .menu-overlay__nav > *:nth-child(4){ transition-delay:.60s; }
+body.menu-open .menu-overlay__social{ opacity:1; transform:none; transition-delay:.78s; }
+
+/* ============================================================
+   MODAL RECENSIONI — vetro smerigliato + 2 card quadrate con profondità
+   ============================================================ */
+.review-modal{
+  position:fixed; inset:0; left:0; right:0; margin-inline:auto; max-width:var(--app-max);
+  z-index:200; display:flex; align-items:center; justify-content:center;
+  padding:32px var(--pad);
+  background:rgba(18,38,60,.4);
+  backdrop-filter:blur(16px) saturate(130%);
+  -webkit-backdrop-filter:blur(16px) saturate(130%);
+  opacity:0; pointer-events:none;
+  transition:opacity .35s ease;
+}
+body.review-open{ overflow:hidden; }
+body.review-open .review-modal{ opacity:1; pointer-events:auto; }
+
+.review-modal__panel{
+  position:relative; width:100%; max-width:260px;
+  display:flex; flex-direction:column; gap:20px;
+}
+.review-modal__close{
+  position:absolute; top:-56px; right:0;
+  width:40px; height:40px; display:grid; place-items:center;
+  color:#fff; font-size:26px; line-height:1;
+  opacity:0; transform:translateY(-8px);
+  transition:opacity .35s ease .25s, transform .35s ease .25s;
+}
+body.review-open .review-modal__close{ opacity:1; transform:none; }
+
+.review-card{
+  position:relative; aspect-ratio:1/1; border-radius:22px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  background:linear-gradient(160deg,#fdfbf7,#f2ebdd);
+  border:1px solid rgba(29,70,112,.14);
+  box-shadow:
+    0 30px 54px -22px rgba(8,20,36,.55),
+    0 2px 0 0 rgba(255,255,255,.7) inset,
+    0 -18px 30px -22px rgba(29,70,112,.12) inset;
+  transform:translateY(22px) scale(.93); opacity:0;
+  transition:transform .45s var(--ease), opacity .45s var(--ease), box-shadow .2s ease;
+}
+.review-card:active{ transform:scale(.96); box-shadow:0 16px 30px -18px rgba(8,20,36,.5), 0 2px 0 0 rgba(255,255,255,.7) inset; }
+body.review-open .review-card{ transform:none; opacity:1; }
+body.review-open .review-card:nth-child(2){ transition-delay:.08s; }
+body.review-open .review-card:nth-child(3){ transition-delay:.16s; }
+
+.review-card__ico{ width:72px; height:50px; }
+.review-card__label{
+  font:600 12px/1 var(--sans); letter-spacing:.18em; text-transform:uppercase; color:var(--navy);
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto !important; }
+  /* il menu è un'azione VOLONTARIA (tap): l'onda resta — solo un filo più rapida e sobria */
+  .wave-curtain{ transition-duration:.5s !important; }                  /* chiusura: marea che si ritira */
+  body.menu-open .wave-curtain{ transition-duration:.62s !important; } /* apertura: un filo più lenta */
+  .review-modal,.review-modal__close,.review-card{ transition:opacity .2s ease !important; transform:none !important; }
+}
+
+@media (max-width:340px){ :root{ --pad:16px; } }
+
+/* ============================================================
+   RESPONSIVE — crescita del contenitore, condivisa da tutte le pagine.
+   Sotto i 768px (mobile) nessuna di queste regole si applica: il layout
+   di partenza resta quello mobile, sempre invariato. index.html
+   ridefinisce --app-max/--wide-pad a ≥1024px per tenere conto della
+   sidebar di navigazione della pagina menu.
+   ============================================================ */
+@media (min-width:768px){
+  :root{ --app-max: 760px; }
+}
+
+@media (min-width:1024px){
+  :root{
+    /* il "cartellino" continua a crescere SENZA LIMITI fino a riempire
+       tutto lo schermo, a qualunque risoluzione; il contenuto testuale
+       resta invece ancorato a ~1080px (comodo da leggere) tramite
+       --wide-pad, che assorbe la larghezza in eccesso come margine
+       interno crescente. Deve restare in vw (non %): una custom property
+       con una percentuale si ricalcola in base al blocco contenitore di
+       CIASCUN elemento che la usa, e con % elementi annidati più in
+       profondità calcolerebbero un valore diverso da quello inteso. */
+    --app-max: max(1080px, 100vw);
+    --wide-pad: max(var(--pad), calc((var(--app-max) - 1080px)/2));
+  }
+}

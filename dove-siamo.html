@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1d4670" />
+<meta name="description" content="In Piazza — cucina di mare alle Caldine, a due passi da Firenze. Antipasti, primi, secondi e dolci freschi del giorno." />
+<title>In Piazza · Cucina di mare</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/base.css" />
+
+<style>
+/* ============================================================
+   IN PIAZZA — pagina DOVE SIAMO
+   Stili condivisi (tokens, reset, .app, hamburger/logo, footer, overlay
+   menu, modal recensioni, breakpoint di crescita) sono in css/base.css.
+   Qui solo ciò che è specifico di questa pagina.
+   ============================================================ */
+
+/* Barra superiore compatta: hamburger + logo (stessa identità del sito) */
+.dove-topbar{
+  position:sticky; top:0; z-index:50;
+  height:var(--hero-cmp);
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(180deg,#dfeaf1 0%, #e9f0f2 55%, var(--bg-base) 100%);
+  border-bottom:1px solid var(--line);
+}
+.dove-topbar .logo__word{
+  font-family:var(--serif); font-style:italic; font-weight:600;
+  font-size:1.5rem; line-height:1; color:var(--navy); letter-spacing:.01em;
+}
+
+/* sfondo pagina: colore crema uniforme, coerente con il resto del sito. */
+.app{ background-image:none; }
+
+/* ============================================================
+   HERO fotografico — foto reale (non illustrazione), non ancora quella
+   definitiva delle Caldine: per ora mostra Porto Venere, da cui la
+   famiglia è originaria (il ristorante è alle Caldine, Fiesole).
+   Scrim navy per leggibilità del testo in overlay.
+   ============================================================ */
+.dove-hero{
+  position:relative; overflow:hidden;
+  min-height:66vh;
+  display:flex; align-items:flex-end; justify-content:center;
+  padding:0 var(--pad) 46px;
+  background:#0f2338 url('image/separatori/dv_7.webp') center 38% / cover no-repeat;
+}
+.dove-hero::before{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(10,24,40,.06) 0%, rgba(10,24,40,.1) 34%,
+    rgba(9,22,38,.58) 70%, rgba(8,19,33,.9) 100%);
+}
+.dove-hero__in{ position:relative; z-index:1; text-align:center; }
+.dove-hero__eyebrow{
+  font:600 clamp(11px,3.2vw,13px)/1 var(--sans);
+  letter-spacing:.36em; text-transform:uppercase; color:#e9d3a1;
+  margin:0 0 14px;
+}
+.dove-hero__title{
+  font-family:var(--serif); font-style:italic; font-weight:600;
+  font-size:clamp(2.7rem,13vw,3.7rem); line-height:1; color:#fff;
+  margin:0; text-shadow:0 8px 34px rgba(0,0,0,.38);
+}
+.dove-hero__rule{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  margin:18px auto 14px; width:150px; color:rgba(255,255,255,.5);
+}
+.dove-hero__rule::before,.dove-hero__rule::after{
+  content:""; height:1px; flex:1 1 auto;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+}
+.dove-hero__rule span{ font-size:9px; color:#e9d3a1; }
+.dove-hero__sub{
+  font-family:var(--serif); font-style:italic; font-weight:400;
+  font-size:clamp(1rem,4.2vw,1.14rem); line-height:1.55; color:rgba(255,255,255,.94);
+  margin:0 auto; max-width:21em;
+}
+
+/* raccordo tra la foto e la pagina: rgb(8,20,32) -> rgb(248,244,240).
+   Interpolazione in OKLCH (non RGB): evita la fascia grigia "sporca" che
+   compare a metà quando si sfuma un blu scuro in un chiaro caldo in RGB
+   normale — con OKLCH la luminosità percepita cresce in modo lineare,
+   niente stacco visibile a occhio. */
+.dove-seam{
+  height:70px;
+  background:linear-gradient(180deg, rgb(8,20,32) 0%, rgb(248,244,240) 100%);            /* fallback */
+  background:linear-gradient(180deg in oklch, rgb(8,20,32) 0%, rgb(248,244,240) 100%);
+}
+
+/* ============================================================
+   SCHEDA INDIRIZZO — sotto la foto, sul crema del sito.
+   Editoriale, sobria: niente cornici — spazio, tipografia, un filo d'oro.
+   ============================================================ */
+.dove-card{ position:relative; text-align:center; padding:54px var(--pad) 10px; }
+.dove-card__pin{
+  width:22px; height:22px; margin:0 auto 20px; color:var(--gold-deep);
+}
+.dove-card__addr{
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:clamp(1.32rem,5.6vw,1.62rem); line-height:1.5; color:var(--navy);
+  margin:0;
+}
+.dove-card__rule{
+  width:42px; height:1px; margin:28px auto;
+  background:linear-gradient(90deg,transparent,var(--gold-line),transparent);
+}
+
+.dove-card__actions{
+  display:flex; gap:12px; justify-content:center;
+  max-width:340px; margin:0 auto;
+}
+.dove-btn{
+  flex:1 1 0; position:relative;
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  padding:16px 14px; border-radius:999px;
+  font:600 11px/1 var(--sans); letter-spacing:.13em; text-transform:uppercase;
+  transition:transform .15s ease, background .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease;
+}
+.dove-btn:active{ transform:scale(.965); }
+.dove-btn svg{ width:14px; height:14px; flex:none; }
+.dove-btn--solid{
+  background:var(--navy); color:#fff;
+  box-shadow:0 16px 28px -16px rgba(22,54,90,.55);
+}
+.dove-btn--solid:hover{ background:var(--navy-deep); }
+.dove-btn--ghost{
+  background:transparent; color:var(--navy);
+  border:1px solid rgba(29,70,112,.32);
+}
+.dove-btn--ghost:hover{ border-color:var(--navy); background:rgba(29,70,112,.045); }
+
+/* ============================================================
+   CHIUSURA — rosa dei venti + citazione
+   ============================================================ */
+.dove-close{ position:relative; text-align:center; padding:52px var(--pad) 64px; }
+.dove-close__compass{ width:52px; height:52px; margin:0 auto 22px; color:var(--ink-soft); opacity:.6; }
+.dove__quote{
+  font-family:var(--serif); font-style:italic; font-weight:400;
+  font-size:clamp(.92rem,3.9vw,1.04rem); line-height:1.6; color:var(--ink);
+  margin:0 auto; max-width:24em;
+}
+
+/* ============================================================
+   ANIMAZIONI — ingresso soft all'apertura (fade + salita), come il menu.
+   Solo transform/opacity => leggere e fluide anche su cellulare.
+   ============================================================ */
+@keyframes dove-rise{
+  from{ opacity:0; transform:translateY(26px); }
+  to{   opacity:1; transform:translateY(0); }
+}
+@keyframes dove-fade{
+  from{ opacity:0; }
+  to{   opacity:1; }
+}
+@keyframes dove-float{
+  0%,100%{ transform:translateY(0); }
+  50%{     transform:translateY(-5px); }
+}
+.dove-hero__in{ animation:dove-rise .9s var(--ease) both .15s; }
+.dove-card__pin,.dove-card__addr,.dove-card__rule,.dove-card__actions{ animation:dove-rise .8s var(--ease) both .1s; }
+.dove-close{ animation:dove-fade 1.1s ease both .1s; }
+/* leggero galleggiamento continuo del segnaposto */
+.dove-card__pin{ animation-name:dove-float, dove-rise; animation-duration:3.6s,.8s; animation-iteration-count:infinite,1; animation-timing-function:ease-in-out,var(--ease); animation-delay:1.2s,.1s; animation-fill-mode:both,both; }
+
+@media (prefers-reduced-motion: reduce){
+  .dove-hero__in,.dove-card__pin,.dove-card__addr,.dove-card__rule,.dove-card__actions,.dove-close{ animation:none !important; }
+}
+
+@media (max-width:340px){
+  .dove-btn{ font-size:9.5px; padding:14px 8px; gap:6px; }
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET (≥768px) & DESKTOP (≥1024px)
+   La versione mobile qui sopra (senza media query) resta invariata.
+   Il contenitore si allarga (--app-max/--wide-pad: vedi css/base.css).
+   Questa pagina usa già solo foto reali (niente illustrazioni a china),
+   quindi basta ancorare il testo/i pulsanti tramite --wide-pad.
+   ============================================================ */
+@media (min-width:1024px){
+  .dove-hero,
+  .dove-card,
+  .dove-close{
+    padding-left:var(--wide-pad); padding-right:var(--wide-pad);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- ===== BARRA SUPERIORE (stessa identità dell'header) ===== -->
+  <header class="dove-topbar">
+    <button class="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="overlay-menu">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="logo__word">In Piazza</span>
+  </header>
+
+  <main>
+    <!-- ===== DOVE SIAMO — hero fotografico ===== -->
+    <section class="dove-hero" aria-labelledby="dove-title">
+      <div class="dove-hero__in">
+        <p class="dove-hero__eyebrow">Dove siamo</p>
+        <h1 id="dove-title" class="dove-hero__title">In Piazza</h1>
+        <div class="dove-hero__rule" aria-hidden="true"><span>◆</span></div>
+        <p class="dove-hero__sub">Alle porte di Firenze, l'autentica cucina di mare immersa nella tranquillità delle Caldine.</p>
+      </div>
+    </section>
+
+    <div class="dove-seam" aria-hidden="true"></div>
+
+    <!-- ===== scheda indirizzo ===== -->
+    <section class="dove-card" aria-label="Indirizzo e contatti">
+      <svg class="dove-card__pin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <p class="dove-card__addr">Piazza dei Mezzadri<br/>50014 Caldine · Fiesole (FI)</p>
+      <div class="dove-card__rule" aria-hidden="true"></div>
+
+      <div class="dove-card__actions">
+        <a class="dove-btn dove-btn--solid" href="https://maps.app.goo.gl/5trc5QQUGpTFEYTVA" target="_blank" rel="noopener">
+          Come arrivare
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="dove-btn dove-btn--ghost" href="tel:055541114">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Chiamaci
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== chiusura — rosa dei venti + citazione ===== -->
+    <section class="dove-close">
+      <svg class="dove-close__compass" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="1"/>
+        <circle cx="24" cy="24" r="13.5" stroke="currentColor" stroke-width="0.5" opacity=".5"/>
+        <path d="M24 9 L27.6 21 L24 24 L20.4 21 Z" fill="currentColor"/>
+        <path d="M24 39 L27.6 27 L24 24 L20.4 27 Z" fill="currentColor" opacity=".35"/>
+        <path d="M9 24 L21 20.4 L24 24 L21 27.6 Z" fill="currentColor" opacity=".65"/>
+        <path d="M39 24 L27 20.4 L24 24 L27 27.6 Z" fill="currentColor" opacity=".65"/>
+        <circle cx="24" cy="24" r="1.6" fill="currentColor"/>
+        <text x="24" y="6.6" text-anchor="middle" font-size="7" font-family="Inter,sans-serif" font-weight="700" fill="currentColor">N</text>
+      </svg>
+      <p class="dove__quote">Il mare non ha paese nemmeno lui,<br/>ed è di tutti quelli che lo sanno ascoltare.</p>
+    </section>
+  </main>
+  <div class="menu-overlay" id="overlay-menu" aria-hidden="true" inert>
+    <div class="wave-curtain" aria-hidden="true">
+      <svg class="wave-curtain__edge" viewBox="0 0 1440 170" preserveAspectRatio="none">
+        <path class="wave-front" d="M0,0 H1440 V104 C1250,158 1040,74 840,110 C660,142 360,70 0,108 Z"/>
+        <path class="wave-mid"   d="M0,0 H1440 V76 C1240,128 1020,58 800,88 C600,116 320,52 0,82 Z"/>
+        <path class="wave-back"  d="M0,0 H1440 V50 C1250,96 1030,38 820,64 C620,88 300,34 0,56 Z"/>
+        <path class="wave-foam"  d="M1440,104 C1250,158 1040,74 840,110 C660,142 360,70 0,108"/>
+      </svg>
+    </div>
+
+    <div class="menu-overlay__skyline" aria-hidden="true">
+      <svg viewBox="0 0 390 250" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="ovSea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#a9cce2"/>
+            <stop offset="1" stop-color="#d6e4ef"/>
+          </linearGradient>
+        </defs>
+        <circle cx="102" cy="168" r="30" fill="#f1d6a0" opacity=".8"/>
+        <g fill="none" stroke="#1d4670" stroke-width="2.4" stroke-linecap="round" opacity=".5">
+          <path d="M42,100 q7,-7 14,0 q7,7 14,0"/>
+          <path d="M300,66 q7,-7 14,0 q7,7 14,0"/>
+          <path d="M338,86 q5,-5 10,0 q5,5 10,0"/>
+        </g>
+        <path d="M0,168 Q90,150 190,164 Q280,154 390,166 L390,168 Z" fill="#6f93b4" opacity=".4"/>
+        <g fill="#1d4670">
+          <path d="M14,168 V140 H20 V134 H28 V140 H36 V134 H44 V140 H52 V120 H68 V140 H76 V134 H82 V140 H88 V168 Z"/>
+          <path d="M118,168 V150 H136 V156 H156 V145 H180 V153 H198 V168 Z"/>
+          <path d="M284,168 V128 H298 V96 L307,87 L316,96 V128 H330 V120 Q347,100 364,120 V128 H374 V168 Z"/>
+        </g>
+        <rect x="0" y="168" width="390" height="82" fill="url(#ovSea)"/>
+        <rect x="94" y="168" width="16" height="52" fill="#f1d6a0" opacity=".22"/>
+        <g fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".5">
+          <path d="M28,192 q18,-4 36,0 t36,0"/>
+          <path d="M236,206 q20,-4 40,0 t40,0"/>
+          <path d="M120,222 q16,-3 32,0 t32,0"/>
+        </g>
+      </svg>
+    </div>
+    <div class="menu-overlay__bar">
+      <button class="overlay-close" type="button" aria-label="Chiudi il menu">&times;</button>
+      <a class="btn-prenota" href="index.html#prenota">PRENOTA</a>
+    </div>
+    <div class="logo logo--ov" role="img" aria-label="In Piazza">
+      <svg class="logo__crown" viewBox="0 0 110 34" fill="none" aria-hidden="true">
+        <path d="M14 32 V11 H28 V5 H38 V11 H52 V5 H62 V11 H76 V5 H86 V11 H96 V32" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <span class="logo__word">In Piazza</span>
+      <svg class="logo__fish" viewBox="0 0 168 40" fill="none" aria-hidden="true">
+        <path d="M6 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M48 22 L40 15 L44 22 L40 29 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M48 22 Q70 9 96 22 Q70 35 48 22 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        <circle cx="86" cy="19" r="1.6" fill="currentColor"/>
+        <path d="M96 22 Q108 22 130 22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M130 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <nav class="menu-overlay__nav" aria-label="Navigazione principale">
+      <a href="chi-siamo.html" class="ov-link">Chi siamo</a>
+      <a href="dove-siamo.html" class="ov-link ov-link--gold" aria-current="page">Dove siamo</a>
+      <a href="index.html#antipasti" class="ov-link">Menu Galleria</a>
+      <button type="button" class="ov-link" id="review-trigger">
+        <svg class="ov-link__ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"/></svg>Recensisci
+      </button>
+    </nav>
+    <div class="menu-overlay__social" aria-hidden="true">
+      <span class="social-dot">f</span><span class="social-dot">◎</span><span class="social-dot">✆</span>
+    </div>
+  </div>
+
+  <!-- ===== MODAL RECENSIONI (Google / Tripadvisor) ===== -->
+  <div class="review-modal" id="review-modal" aria-hidden="true" inert>
+    <div class="review-modal__panel">
+      <button type="button" class="review-modal__close" aria-label="Chiudi">&times;</button>
+      <a class="review-card" href="https://maps.app.goo.gl/5trc5QQUGpTFEYTVA" target="_blank" rel="noopener">
+        <svg class="review-card__ico" viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+          <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+          <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/>
+          <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+        </svg>
+        <span class="review-card__label">Google</span>
+      </a>
+      <a class="review-card" href="https://www.tripadvisor.com/Restaurant_Review-g12083518-d15848178-Reviews-In_Piazza-Caldine_Tuscany.html" target="_blank" rel="noopener">
+        <svg class="review-card__ico" viewBox="0 0 48 32" aria-hidden="true" fill="none">
+          <circle cx="12" cy="16" r="11" stroke="#34C12E" stroke-width="2.5"/>
+          <circle cx="36" cy="16" r="11" stroke="#34C12E" stroke-width="2.5"/>
+          <circle cx="12" cy="16" r="4.2" fill="#34C12E"/>
+          <circle cx="36" cy="16" r="4.2" fill="#34C12E"/>
+          <path d="M18 8 Q24 3 30 8" stroke="#34C12E" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="review-card__label">Tripadvisor</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/overlay.js"></script>
+</body>
+</html>
