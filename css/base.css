@@ -204,6 +204,7 @@ body.menu-open .menu-overlay__skyline{ opacity:1; transition-delay:.32s; }
 .logo--ov{ margin-top:6px; color:var(--navy); }
 .logo--ov .logo-mark{ --logo-h:92px; }
 .menu-overlay__nav{
+  top:-30px;                       /* le voci salgono di 30px, più lontane dal panorama */
   flex:1 1 auto;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:32px;
