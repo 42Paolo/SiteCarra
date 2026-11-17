@@ -156,14 +156,31 @@ body.menu-open .wave-curtain{
 .wave-front{ fill:#5491c0; }     /* fronte d'acqua più profondo */
 .wave-foam{  fill:none; stroke:rgba(255,255,255,.85); stroke-width:3; }  /* schiuma sulla cresta */
 
-/* ---- SKYLINE acquerello di Porto Venere (in basso) ---- */
+/* ---- PANORAMA illustrato di Porto Venere (in basso) ----
+   La foto (cielo crema -> mare) si dissolve in alto nel fondo dell'overlay e in basso
+   in una fascia d'acqua che ospita i pulsanti social. Su mobile la foto è ingrandita del 30% (ritaglia il mare vuoto a sinistra);
+   su desktop l'altezza è limitata al 34% dello schermo. */
 .menu-overlay__skyline{
-  position:absolute; left:0; right:0; bottom:0; height:34%;
+  --sky-water:112px;                          /* fascia d'acqua sotto la foto (social) */
+  position:absolute; left:0; right:0; bottom:0;
+  container-type:inline-size;
   opacity:0; transition:opacity .7s ease;     /* compare quando l'onda è passata */
+  pointer-events:none;
 }
 .menu-overlay > .menu-overlay__skyline{ position:absolute; z-index:0; }  /* sopra la tenda, sotto i contenuti */
 body.menu-open .menu-overlay__skyline{ opacity:1; transition-delay:.32s; }
-.menu-overlay__skyline svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.menu-overlay__skyline-in{ --sky-h:min(43.4cqw, 34vh); position:relative; padding-bottom:var(--sky-water); }
+.menu-overlay__skyline-in::before{            /* acqua sotto la foto */
+  content:""; position:absolute; left:0; right:0; bottom:0;
+  height:calc(var(--sky-water) + var(--sky-h)*.15);
+  background:linear-gradient(180deg,#a9cee6 0%,#d6e4ef 100%);
+}
+.menu-overlay__skyline img{
+  position:relative; display:block; width:100%; height:var(--sky-h);
+  object-fit:cover; object-position:100% 100%;   /* ancorata in basso a destra: il paese resta sempre visibile */
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 40%,#000 85%,transparent 100%);
+          mask-image:linear-gradient(180deg,transparent 0,#000 40%,#000 85%,transparent 100%);
+}
 
 .menu-overlay > *{ position:relative; z-index:1; }
 .menu-overlay__bar{ width:100%; display:flex; align-items:center; justify-content:space-between; }
