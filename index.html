@@ -189,7 +189,7 @@ main{ overflow-x:clip; }
   0%  { background-position:200% 0; }
   100%{ background-position:-100% 0; }
 }
-.category[data-cat="antipasti"] .dish-block[data-block-idx="1"]{ background-image:url('image/sfondi/bg-antipasti2.webp'); background-size:100% auto; background-position:top center; padding-bottom:220px; }
+.category[data-cat="antipasti"] .dish-block[data-block-idx="1"]{ background-image:url('image/sfondi/bg-antipasti2.webp'); background-size:100% auto; background-position:top center; padding-bottom:64px; }
 .category[data-cat="primi"]     .dish-block[data-block-idx="1"]{ background-color:var(--bg-base); background-image:url('image/sfondi/bg-primi2.webp'); background-size:100% auto; background-position:center 460px; padding-bottom:520px; }
 .category[data-cat="secondi"]   .dish-block[data-block-idx="0"]{ background-image:url('image/sfondi/bg-secondi.webp'); background-position:center -171px; }
 .category[data-cat="secondi"]   .dish-block[data-block-idx="1"]{ background-image:url('image/sfondi/bg-secondi2.webp'); background-size:100% auto; background-position:top center; background-repeat:no-repeat; overflow:hidden; margin-top:-43px; padding-top:43px; padding-bottom:64px; }
@@ -224,6 +224,7 @@ main{ overflow-x:clip; }
 .plate-block{ margin:0; width:calc(100% + var(--pad) + var(--plate-bleed)); }
 .plate-block--left{ align-self:flex-end; }     /* eccede a sinistra (fuori schermo) */
 .plate-block--right{ align-self:flex-start; }  /* eccede a destra (fuori schermo) */
+.plate-block--feature{ margin-top:28px; }      /* piatto "in evidenza" (feature:true nel MENU): un filo di respiro sopra — solo mobile, da 768px .plate-block azzera il margine */
 .text-block{ align-self:stretch; }             /* il testo resta dentro la colonna */
 
 /* testo del piatto: nome + ingredienti SEMPRE visibili (più gerarchia, pagina piena) */
@@ -769,7 +770,7 @@ main{ overflow-x:clip; }
       { n:"Acciughe di Monterosso", d:"Impanate e fritte su letto all'Isolana.", img:"image/piatti/acciughe-monterosso.webp" },
       { n:"Gran Catalana di crostacei", d:"Con la sua maionese alla curcuma.", img:"image/piatti/gran-catalana.webp" },
       { n:"Ostriche del Golfo dei Poeti", img:"image/piatti/ostriche-golfo-dei-poeti.webp" },
-      { n:"Plateau Royale", img:"image/piatti/plateau-royale.webp" }
+      { n:"Plateau Royale", feature:true, img:"image/piatti/plateau-royale-2.webp" }
     ],
     primi: [
       { n:"Linguine Vongole veraci e Bottarga", d:"Bottarga tagliata a coltello.", img:"image/piatti/linguine-vongole.webp" },
@@ -818,7 +819,7 @@ main{ overflow-x:clip; }
     var inner = d.img
       ? '<div class="plate plate--photo"><img src="'+esc(d.img)+'" alt="'+esc(d.n)+'" loading="lazy" decoding="async" /></div>'
       : '<div class="plate"><span class="plate__label">Foto piatto</span></div>';
-    return '<div class="plate-block plate-block--'+side+'">'+inner+'</div>';
+    return '<div class="plate-block plate-block--'+side+(d.feature ? ' plate-block--feature' : '')+'">'+inner+'</div>';
   }
 
   /* testo del piatto — nome + ingredienti SEMPRE visibili (niente accordion).
