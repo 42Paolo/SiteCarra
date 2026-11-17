@@ -72,34 +72,12 @@
   opacity:calc(.5*(1 - var(--scroll-p,0)));   /* lo skyline svanisce col collasso (scroll-driven) */
 }
 
-/* logo — proprietà scroll-driven via --scroll-p (0=espanso, 1=compatto):
-   sovrascrive la versione statica di base.css solo su questa pagina. */
-.logo{ gap:calc(2px*(1 - var(--scroll-p,0))); }
-.logo__crown{ overflow:hidden;
-  margin-bottom:calc(4px*(1 - var(--scroll-p,0)));
-  max-height:calc(40px*(1 - var(--scroll-p,0)));
-  opacity:calc(1 - var(--scroll-p,0)*2); }
-.logo__fish{ overflow:hidden;
-  margin-top:calc(6px*(1 - var(--scroll-p,0)));
-  max-height:calc(48px*(1 - var(--scroll-p,0)));
-  opacity:calc(1 - var(--scroll-p,0)*2); }
-.logo__word{
-  /* interpolazione 2.4rem → 1.45rem nel range di scroll */
-  font-size:calc(2.4rem - 0.95rem*var(--scroll-p,0));
-}
-/* logo immagine (header): si rimpicciolisce con lo scroll come il logo vettoriale
-   (120px → 38px, la barra compatta è alta 62px). */
-.logo__img{
-  display:block; width:auto; max-width:84vw; object-fit:contain;
-  height:calc(120px - 82px*var(--scroll-p,0));
-}
-/* abbellimenti (tonno, svolazzi, conchiglia): livello separato posizionato in %
-   rispetto alle scritte, che svanisce nel primo terzo dello scroll. */
-.logo__stack{ position:relative; display:block; width:fit-content; line-height:0; }
-.logo__orn{
-  position:absolute; left:40.886%; top:87%; width:18.229%; height:45.868%;
-  pointer-events:none; user-select:none;
-  opacity:calc(1 - var(--scroll-p,0)*3);
+/* logo — il disegno vive in css/base.css (.logo-mark); qui solo la parte scroll-driven
+   via --scroll-p (0=espanso, 1=compatto): scritte 120px → 38px, abbellimenti che svaniscono
+   nel primo terzo dello scroll. */
+.header__hero .logo-mark{
+  --logo-h:calc(120px - 82px*var(--scroll-p,0));
+  --logo-orn-op:calc(1 - var(--scroll-p,0)*3);
 }
 
 /* --- TABS (dentro l'header, sempre visibili) --- */
@@ -433,8 +411,7 @@ main{ overflow-x:clip; }
     position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
     flex-direction:row; align-items:center; gap:10px; color:var(--navy);
   }
-  .desktop-bar__logo .logo__img{ height:50px; max-width:none; }
-  .desktop-bar__logo .logo__orn{ display:none; }   /* barra sempre compatta: niente abbellimenti */
+  .desktop-bar__logo .logo-mark{ --logo-h:50px; --logo-orn-op:0; }   /* barra sempre compatta: niente abbellimenti */
 
   .side-nav{
     display:flex; flex-direction:column;
@@ -595,7 +572,7 @@ main{ overflow-x:clip; }
         <span></span><span></span><span></span>
       </button>
 
-      <div class="logo logo--img"><span class="logo__stack"><img class="logo__orn" src="image/logo/logo-ornaments.webp" alt="" aria-hidden="true" /><img class="logo__img" src="image/logo/logo-lettering.webp" alt="In Piazza Café del Mar" /></span></div>
+      <div class="logo logo--img"><div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div></div>
     </div>
 
     <nav class="tabs" id="tabs" aria-label="Categorie del menu">
@@ -612,7 +589,7 @@ main{ overflow-x:clip; }
     <button class="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="overlay-menu">
       <span></span><span></span><span></span>
     </button>
-    <div class="desktop-bar__logo logo logo--img"><span class="logo__stack"><img class="logo__orn" src="image/logo/logo-ornaments.webp" alt="" aria-hidden="true" /><img class="logo__img" src="image/logo/logo-lettering.webp" alt="In Piazza Café del Mar" /></span></div>
+    <div class="desktop-bar__logo logo logo--img"><div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div></div>
     <span class="desktop-bar__progress" aria-hidden="true"></span>
   </header>
 
@@ -720,19 +697,8 @@ main{ overflow-x:clip; }
     <div class="menu-overlay__bar">
       <button class="overlay-close" type="button" aria-label="Chiudi il menu">&times;</button>
     </div>
-    <div class="logo logo--ov" role="img" aria-label="In Piazza">
-      <svg class="logo__crown" viewBox="0 0 110 34" fill="none" aria-hidden="true">
-        <path d="M14 32 V11 H28 V5 H38 V11 H52 V5 H62 V11 H76 V5 H86 V11 H96 V32" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-      </svg>
-      <span class="logo__word">In Piazza</span>
-      <svg class="logo__fish" viewBox="0 0 168 40" fill="none" aria-hidden="true">
-        <path d="M6 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M48 22 L40 15 L44 22 L40 29 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-        <path d="M48 22 Q70 9 96 22 Q70 35 48 22 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-        <circle cx="86" cy="19" r="1.6" fill="currentColor"/>
-        <path d="M96 22 Q108 22 130 22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M130 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
+    <div class="logo logo--ov">
+      <div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div>
     </div>
     <nav class="menu-overlay__nav" aria-label="Navigazione principale">
       <a href="chi-siamo.html" class="ov-link">Chi siamo</a>

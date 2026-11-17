@@ -28,10 +28,7 @@
   background:linear-gradient(180deg,#dfeaf1 0%, #e9f0f2 55%, var(--bg-base) 100%);
   border-bottom:1px solid var(--line);
 }
-.dove-topbar .logo__word{
-  font-family:var(--serif); font-style:italic; font-weight:600;
-  font-size:1.5rem; line-height:1; color:var(--navy); letter-spacing:.01em;
-}
+.dove-topbar .logo-mark{ --logo-h:38px; --logo-orn-op:0; }   /* barra compatta: solo scritte */
 
 /* sfondo pagina: colore crema uniforme, coerente con il resto del sito. */
 .app{ background-image:none; }
@@ -200,7 +197,7 @@
     <button class="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="overlay-menu">
       <span></span><span></span><span></span>
     </button>
-    <span class="logo__word">In Piazza</span>
+    <div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div>
   </header>
 
   <main>
@@ -268,19 +265,8 @@
     <div class="menu-overlay__bar">
       <button class="overlay-close" type="button" aria-label="Chiudi il menu">&times;</button>
     </div>
-    <div class="logo logo--ov" role="img" aria-label="In Piazza">
-      <svg class="logo__crown" viewBox="0 0 110 34" fill="none" aria-hidden="true">
-        <path d="M14 32 V11 H28 V5 H38 V11 H52 V5 H62 V11 H76 V5 H86 V11 H96 V32" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-      </svg>
-      <span class="logo__word">In Piazza</span>
-      <svg class="logo__fish" viewBox="0 0 168 40" fill="none" aria-hidden="true">
-        <path d="M6 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M48 22 L40 15 L44 22 L40 29 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-        <path d="M48 22 Q70 9 96 22 Q70 35 48 22 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-        <circle cx="86" cy="19" r="1.6" fill="currentColor"/>
-        <path d="M96 22 Q108 22 130 22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M130 22 q8 -9 16 0 q8 9 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
+    <div class="logo logo--ov">
+      <div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div>
     </div>
     <nav class="menu-overlay__nav" aria-label="Navigazione principale">
       <a href="chi-siamo.html" class="ov-link">Chi siamo</a>

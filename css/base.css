@@ -101,11 +101,27 @@ img{ max-width:100%; display:block; }
 }
 
 .logo{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:2px; color:var(--navy); user-select:none; }
-.logo__crown{ width:96px; height:auto; }
-.logo__fish{ width:158px; height:auto; }
-.logo__word{
-  font-family:var(--serif); font-style:italic; font-weight:600;
-  font-size:2.4rem; line-height:1; letter-spacing:.01em;
+
+/* ---------- LOGO UNICO DEL SITO ("In Piazza · Café del Mar") ----------
+   È definito SOLO qui: ogni pagina contiene soltanto <div class="logo-mark" role="img"
+   aria-label="…"></div>. Per cambiarlo ovunque basta sostituire i due file in image/logo/
+   (logo-lettering.webp = scritte, logo-ornaments.webp = stella/abbellimenti: stessa
+   proporzione e stessa posizione) oppure modificare questa regola.
+   Dimensione: variabile --logo-h sul singolo contesto (header, barre, overlay);
+   abbellimenti: --logo-orn-op (1 = visibili, 0 = nascosti, calc(...) = animati dallo scroll). */
+.logo-mark{
+  --logo-h:80px;
+  position:relative; display:block; flex:none;
+  height:min(var(--logo-h), 33vw);            /* su schermi stretti non sfora mai la larghezza */
+  aspect-ratio:1200 / 477;
+  background:url('../image/logo/logo-lettering.webp') center / 100% 100% no-repeat;
+  user-select:none;
+}
+.logo-mark::before{                           /* abbellimenti: livello separato posizionato in % sulle scritte */
+  content:""; position:absolute; left:40.886%; top:87%; width:18.229%; height:45.868%;
+  background:url('../image/logo/logo-ornaments.webp') center / 100% 100% no-repeat;
+  opacity:var(--logo-orn-op, 1);
+  pointer-events:none;
 }
 
 /* ============================================================
@@ -186,9 +202,7 @@ body.menu-open .menu-overlay__skyline{ opacity:1; transition-delay:.32s; }
 .menu-overlay__bar{ width:100%; display:flex; align-items:center; justify-content:space-between; }
 .overlay-close{ width:42px; height:42px; font-size:26px; line-height:1; color:var(--navy); }
 .logo--ov{ margin-top:6px; color:var(--navy); }
-.logo--ov .logo__crown{ width:78px; }
-.logo--ov .logo__word{ font-size:2rem; }
-.logo--ov .logo__fish{ width:120px; }
+.logo--ov .logo-mark{ --logo-h:92px; }
 .menu-overlay__nav{
   flex:1 1 auto;
   display:flex; flex-direction:column; align-items:center; justify-content:center;

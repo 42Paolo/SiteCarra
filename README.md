@@ -21,12 +21,23 @@ js/
                       + modal recensioni (Google/Tripadvisor)
 
 image/
+  logo/              logo-lettering.webp + logo-ornaments.webp: il logo UNICO
+                      del sito (vedi "Logo" sotto)
+  piatti/            foto dei piatti con sfondo trasparente (900x900, webp)
   sfondi/            illustrazioni a china di sfondo (solo mobile/tablet:
-                      su desktop lasciano il posto a un colore neutro)
+                      su desktop lasciano il posto a un colore neutro);
+                      overlay-porto-venere.webp = panorama del menu a tendina
   separatori/        foto panoramiche reali usate come separatori/hero
 ```
 
 Ogni pagina ha poi un proprio `<style>` e `<script>` inline per ciò che le è specifico (griglia piatti e scroll-spy in `index.html`, reveal-on-scroll in `chi-siamo.html`, ecc.). Se cambi un colore, un font o il comportamento del menu overlay, modifica **una sola volta** in `css/base.css` / `js/overlay.js`: si applica automaticamente a tutte e tre le pagine.
+
+## Logo
+
+Il logo ("In Piazza · Café del Mar" + stella) è definito **una volta sola**, in `css/base.css` (`.logo-mark`). Ogni pagina contiene solo il segnaposto `<div class="logo-mark" role="img" aria-label="…"></div>` (header, barre in alto, menu a tendina): niente copie del disegno da tenere allineate.
+
+- **Cambiare il logo ovunque:** sostituisci `image/logo/logo-lettering.webp` (scritte) e `image/logo/logo-ornaments.webp` (stella/abbellimenti) mantenendo proporzioni e posizione, oppure modifica la regola `.logo-mark` in `css/base.css`.
+- **Dimensione per contesto:** variabile `--logo-h` (es. 120px→38px nell'header che collassa, 92px nel menu a tendina). `--logo-orn-op` regola gli abbellimenti: 1 visibili, 0 nascosti, `calc(...)` animati dallo scroll.
 
 ## Come vedere il risultato
 
