@@ -39,6 +39,10 @@ Il logo ("In Piazza · Café del Mar" + stella) è definito **una volta sola**, 
 - **Cambiare il logo ovunque:** sostituisci `image/logo/logo-lettering.webp` (scritte) e `image/logo/logo-ornaments.webp` (stella/abbellimenti) mantenendo proporzioni e posizione, oppure modifica la regola `.logo-mark` in `css/base.css`.
 - **Dimensione per contesto:** variabile `--logo-h` (es. 120px→38px nell'header che collassa, 92px nel menu a tendina). `--logo-orn-op` regola gli abbellimenti: 1 visibili, 0 nascosti, `calc(...)` animati dallo scroll.
 
+## Aggiornamenti e cache del browser
+
+GitHub Pages fa tenere ai browser i file per ~10 minuti. Per evitare che dopo una modifica un visitatore veda l'HTML nuovo con il CSS/JS vecchio (es. logo sparito), le pagine richiamano `css/base.css?v=…` e `js/overlay.js?v=…`: **quando modifichi `css/base.css` o `js/overlay.js`, cambia il numero `v=` in tutte e tre le pagine** (basta un nuovo valore, es. la data).
+
 ## Come vedere il risultato
 
 Serve un server locale (i moduli CSS/JS esterni non si caricano da `file://`):
