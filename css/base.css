@@ -269,7 +269,6 @@ body.menu-open .menu-overlay__social{ opacity:1; transform:none; transition-dela
      --yc  punto a metà tra l'onda e la città: le voci sono centrate lì
    così onde, voci e Porto Venere restano nella stessa proporzione su ogni telefono.
    ============================================================ */
-.logo__tagline,
 .menu-overlay__label{ display:none; }
 
 @media (max-width:767px){
@@ -308,21 +307,15 @@ body.menu-open .menu-overlay__social{ opacity:1; transform:none; transition-dela
     top:calc(52.5 * var(--k) - 21px); left:calc(61 * var(--k) - 21px);
   }
 
-  /* gruppo 1 — logo + sottotitolo */
+  /* gruppo 1 — logo + stella */
   .logo--ov{
     --ov-logo-h:calc(211.7 * var(--k));
     margin-top:calc(80.2 * var(--k));
     min-height:calc(var(--yc) - 247.5 * var(--k) - 80.2 * var(--k));   /* le voci partono da yc - metà blocco */
   }
   .logo--ov .logo-mark{ --logo-h:var(--ov-logo-h); }
-  .logo__tagline{
-    display:block;
-    margin:calc(69.5 * var(--k) - 2px) 0 0;
-    padding-left:calc(3.85 * var(--k));            /* centra l'inchiostro: compensa lo spazio dopo l'ultima lettera */
-    font-family:'Cormorant Garamond', Georgia, serif; font-weight:600;
-    font-size:calc(28.8 * var(--k)); line-height:1; letter-spacing:calc(3.85 * var(--k));
-    text-transform:uppercase; white-space:nowrap; color:var(--navy-ov);
-  }
+  /* la stella (abbellimento del logo) nel menu: 30% più grande e più in basso, al posto del vecchio sottotitolo */
+  .logo--ov .logo-mark::before{ left:38.151%; top:98%; width:23.698%; height:59.628%; }
 
   /* gruppo 2 — navigazione (centrata a metà tra onda e città) */
   .menu-overlay__nav{ box-sizing:border-box; top:0; flex:none; width:100%; padding:0 var(--pad); gap:0; justify-content:flex-start; }
