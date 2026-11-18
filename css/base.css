@@ -229,6 +229,7 @@ body.menu-open .menu-overlay__skyline{ opacity:1; transition-delay:.32s; }
 .menu-overlay__bar,
 .menu-overlay .logo--ov,
 .menu-overlay__nav > *,
+.menu-overlay__label,
 .menu-overlay__social{
   opacity:0; transform:translateY(18px);
   transition:opacity .5s ease, transform .55s cubic-bezier(.25,1,.5,1);
@@ -240,7 +241,80 @@ body.menu-open .menu-overlay__nav > *:nth-child(1){ transition-delay:.42s; }
 body.menu-open .menu-overlay__nav > *:nth-child(2){ transition-delay:.48s; }
 body.menu-open .menu-overlay__nav > *:nth-child(3){ transition-delay:.54s; }
 body.menu-open .menu-overlay__nav > *:nth-child(4){ transition-delay:.60s; }
+body.menu-open .menu-overlay__label{ opacity:1; transform:none; transition-delay:.72s; }
 body.menu-open .menu-overlay__social{ opacity:1; transform:none; transition-delay:.78s; }
+
+/* ============================================================
+   OVERLAY MENU — RESTYLING MOBILE (< 768px)
+   Solo telefono: da 768px in su il menu resta quello di prima.
+   Composizione in 3 gruppi (flex): logo + sottotitolo / navigazione / social.
+   Lo sfondo è l'illustrazione unica image/sfondi/menu-mobile.webp (cielo, onde
+   in alto, Porto Venere e mare in basso), servita dalla stessa tenda che scende
+   all'apertura: nessun gradiente o onda in più sopra l'immagine.
+   ============================================================ */
+.logo__tagline,
+.menu-overlay__label{ display:none; }
+
+@media (max-width:767px){
+  .menu-overlay{ padding:18px var(--pad) calc(16px + env(safe-area-inset-bottom, 0px)); }
+
+  /* sfondo: larghezza piena, mai deformato. L'ancoraggio verticale è calcolato per
+     tenere le onde sotto il logo e Porto Venere sopra la fascia d'acqua dei social
+     (proporzioni immagine: 791×1989 -> altezza = 2.5145 × larghezza). */
+  .wave-curtain{
+    --ov-w:min(100vw, 480px);
+    background:#e9f2f8 url('../image/sfondi/menu-mobile.webp') no-repeat;
+    background-size:cover;
+    background-position:center min(calc(255px - .664*var(--ov-w)), calc(100vh - 86px - 1.986*var(--ov-w)));
+    background-position:center min(calc(255px - .664*var(--ov-w)), calc(100dvh - 86px - 1.986*var(--ov-w)));
+  }
+  .menu-overlay__skyline{ display:none; }          /* il panorama è già nello sfondo */
+
+  /* gruppo 1 — logo + sottotitolo (il pulsante di chiusura esce dal flusso) */
+  .menu-overlay > .menu-overlay__bar{ position:absolute; top:18px; left:var(--pad); width:auto; }
+  .logo--ov{ --ov-logo-h:104px; margin-top:20px; }
+  .logo--ov .logo-mark{ --logo-h:var(--ov-logo-h); }
+  .logo__tagline{
+    display:block;
+    margin:calc(min(var(--ov-logo-h), 33vw)*.34 + 3px) 0 0;   /* sotto la rosa dei venti */
+    font-family:'Cormorant Garamond', Georgia, serif; font-weight:500;
+    font-size:13px; line-height:1.3; letter-spacing:2.5px; text-transform:uppercase;
+    text-align:center; white-space:nowrap; color:var(--navy);
+  }
+
+  /* gruppo 2 — navigazione, centrata nello spazio rimasto */
+  .menu-overlay__nav{ top:0; width:100%; padding:0; gap:clamp(10px, 2.2vh, 20px); }
+  .ov-link{
+    font-family:'Cormorant Garamond', Georgia, serif; font-weight:500;
+    font-size:min(32px, 7.4vw); line-height:1.2; letter-spacing:2px;
+    text-align:center; white-space:nowrap;
+    padding:4px 0;
+  }
+  .ov-link--main{                                   /* MENU GALLERIA: voce principale */
+    color:var(--gold-line); background:transparent;
+    border:1px solid var(--gold-line); border-radius:6px;
+    padding:10px 24px;
+  }
+  .ov-link__ico{ width:18px; height:18px; margin-right:10px; vertical-align:-1px; }
+
+  /* gruppo 3 — social */
+  .menu-overlay__label{
+    display:block; margin:auto 0 10px;
+    font-family:'Cormorant Garamond', Georgia, serif; font-weight:500;
+    font-size:16px; line-height:1.2; letter-spacing:2px; text-transform:uppercase;
+    text-align:center; color:var(--navy);
+  }
+  .menu-overlay__social{ margin-top:0; padding-top:0; gap:24px; }
+  .menu-overlay__social .social-dot{ border-width:1px; }   /* bordo più leggero */
+}
+
+/* telefoni con schermo basso: stessa composizione, più compatta */
+@media (max-width:767px) and (max-height:720px){
+  .logo--ov{ --ov-logo-h:84px; margin-top:16px; }
+  .ov-link{ font-size:min(28px, 7.2vw); }
+  .ov-link--main{ padding:8px 22px; }
+  .menu-overlay__nav{ gap:clamp(6px, 1.6vh, 12px); }
+}
 
 /* ============================================================
    MODAL RECENSIONI — vetro smerigliato + 2 card quadrate con profondità
