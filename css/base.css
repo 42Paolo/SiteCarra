@@ -247,73 +247,124 @@ body.menu-open .menu-overlay__social{ opacity:1; transform:none; transition-dela
 /* ============================================================
    OVERLAY MENU — RESTYLING MOBILE (< 768px)
    Solo telefono: da 768px in su il menu resta quello di prima.
-   Composizione in 3 gruppi (flex): logo + sottotitolo / navigazione / social.
-   Lo sfondo è l'illustrazione unica image/sfondi/menu-mobile.webp (cielo, onde
-   in alto, Porto Venere e mare in basso), servita dalla stessa tenda che scende
-   all'apertura: nessun gradiente o onda in più sopra l'immagine.
+
+   Sfondo: image/sfondi/menu-mobile.webp (791×1989: cielo, onde in alto, Porto
+   Venere e mare in basso), servito dalla tenda che scende all'apertura.
+   Tutte le misure del menu derivano dalla scala dello sfondo:
+     --hs  altezza con cui lo sfondo è disegnato (si adatta senza deformarsi)
+     --k   1 px dell'illustrazione di riferimento = --k px css
+     --by  scostamento verticale dello sfondo (mai spazi vuoti sopra/sotto)
+     --yc  punto a metà tra l'onda e la città: le voci sono centrate lì
+   così onde, voci e Porto Venere restano nella stessa proporzione su ogni telefono.
    ============================================================ */
 .logo__tagline,
 .menu-overlay__label{ display:none; }
 
 @media (max-width:767px){
-  .menu-overlay{ padding:18px var(--pad) calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .menu-overlay{
+    --W:min(100vw, 480px);                 /* misure dell'overlay: fallback in unità viewport, */
+    --H:100vh;                             /* sostituite da quelle reali del contenitore (sotto) */
+    --navy-ov:#04305e;                     /* blu delle scritte del menu (poco più vivo di quello del logo, come nel modello) */
+    --gold-ov:#d09525;
+    --gold-soft:rgba(208,149,37,.74);
+    --hs:max(calc(2.5145 * var(--W)), var(--H));
+    --k:calc(var(--hs) / 1989);
+    --dot:max(36px, calc(74 * var(--k)));                       /* cerchi social */
+    --gh:calc(65 * var(--k) + var(--dot));                      /* ingombro "Seguici" + cerchi */
+    --by:clamp(calc(var(--H) - var(--hs)),
+               min(0px, calc(var(--H) - 22px - var(--gh) - 0.782 * var(--hs))), 0px);
+    --yc:calc(var(--by) + 0.5148 * var(--hs));                  /* a metà tra onda e città */
+    --mb:max(14px, min(calc(129 * var(--k)),
+               calc(var(--H) - var(--gh) - 8px - var(--by) - 0.782 * var(--hs))));
+    padding:0;                             /* niente padding: le unità cq misurano l'area interna del contenitore */
+  }
+  @supports (width:1cqw){
+    .menu-overlay{ container-type:size; --W:100cqw; --H:100cqh; }
+  }
 
-  /* sfondo: larghezza piena, mai deformato. L'ancoraggio verticale è calcolato per
-     tenere le onde sotto il logo e Porto Venere sopra la fascia d'acqua dei social
-     (proporzioni immagine: 791×1989 -> altezza = 2.5145 × larghezza). */
   .wave-curtain{
-    --ov-w:min(100vw, 480px);
     background:#e9f2f8 url('../image/sfondi/menu-mobile.webp') no-repeat;
-    background-size:cover;
-    background-position:center min(calc(255px - .664*var(--ov-w)), calc(100vh - 86px - 1.986*var(--ov-w)));
-    background-position:center min(calc(255px - .664*var(--ov-w)), calc(100dvh - 86px - 1.986*var(--ov-w)));
+    background-size:auto var(--hs);
+    background-position:center var(--by);
   }
   .menu-overlay__skyline{ display:none; }          /* il panorama è già nello sfondo */
 
-  /* gruppo 1 — logo + sottotitolo (il pulsante di chiusura esce dal flusso) */
-  .menu-overlay > .menu-overlay__bar{ position:absolute; top:18px; left:var(--pad); width:auto; }
-  .logo--ov{ --ov-logo-h:104px; margin-top:20px; }
+  /* chiusura (fuori dal flusso: il logo sale fino in cima) */
+  .menu-overlay > .menu-overlay__bar{
+    position:absolute; width:auto;
+    top:calc(52.5 * var(--k) - 21px); left:calc(61 * var(--k) - 21px);
+  }
+
+  /* gruppo 1 — logo + sottotitolo */
+  .logo--ov{
+    --ov-logo-h:calc(211.7 * var(--k));
+    margin-top:calc(80.2 * var(--k));
+    min-height:calc(var(--yc) - 247.5 * var(--k) - 80.2 * var(--k));   /* le voci partono da yc - metà blocco */
+  }
   .logo--ov .logo-mark{ --logo-h:var(--ov-logo-h); }
   .logo__tagline{
     display:block;
-    margin:calc(min(var(--ov-logo-h), 33vw)*.34 + 3px) 0 0;   /* sotto la rosa dei venti */
-    font-family:'Cormorant Garamond', Georgia, serif; font-weight:500;
-    font-size:13px; line-height:1.3; letter-spacing:2.5px; text-transform:uppercase;
-    text-align:center; white-space:nowrap; color:var(--navy);
+    margin:calc(69.5 * var(--k) - 2px) 0 0;
+    padding-left:calc(3.85 * var(--k));            /* centra l'inchiostro: compensa lo spazio dopo l'ultima lettera */
+    font-family:'Cormorant Garamond', Georgia, serif; font-weight:600;
+    font-size:calc(28.8 * var(--k)); line-height:1; letter-spacing:calc(3.85 * var(--k));
+    text-transform:uppercase; white-space:nowrap; color:var(--navy-ov);
   }
 
-  /* gruppo 2 — navigazione, centrata nello spazio rimasto */
-  .menu-overlay__nav{ top:0; width:100%; padding:0; gap:clamp(10px, 2.2vh, 20px); }
+  /* gruppo 2 — navigazione (centrata a metà tra onda e città) */
+  .menu-overlay__nav{ box-sizing:border-box; top:0; flex:none; width:100%; padding:0 var(--pad); gap:0; justify-content:flex-start; }
   .ov-link{
-    font-family:'Cormorant Garamond', Georgia, serif; font-weight:500;
-    font-size:min(32px, 7.4vw); line-height:1.2; letter-spacing:2px;
-    text-align:center; white-space:nowrap;
-    padding:4px 0;
+    box-sizing:border-box; display:flex; align-items:center; justify-content:center;
+    height:calc(64 * var(--k)); margin:0; padding:0 0 0 calc(3.3 * var(--k));
+    font-family:'Cormorant Garamond', Georgia, serif; font-weight:700;
+    font-size:calc(50 * var(--k)); line-height:1; letter-spacing:calc(3.3 * var(--k));
+    text-transform:uppercase; white-space:nowrap; color:var(--navy-ov);
   }
-  .ov-link--main{                                   /* MENU GALLERIA: voce principale */
-    color:var(--gold-line); background:transparent;
-    border:1px solid var(--gold-line); border-radius:6px;
-    padding:10px 24px;
+  .ov-link:hover,.ov-link--gold{ color:var(--gold-ov); }
+  .menu-overlay__nav > :nth-child(2){ margin-top:calc(63 * var(--k)); }
+  .menu-overlay__nav > :nth-child(3){ margin-top:calc(80.5 * var(--k)); }
+  .menu-overlay__nav > :nth-child(4){ margin-top:calc(62.5 * var(--k)); }
+
+  .ov-link--main{                                  /* MENU GALLERIA: targa con angoli a S */
+    width:calc(576 * var(--k)); max-width:100%; height:calc(97 * var(--k));
+    color:var(--gold-ov);
+    border:1px solid transparent;
+    border-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='74' height='66' viewBox='0 0 74 66'%3E%3Cpath d='M35.39 1.55L38.61 1.55C45.91 1.55 51.23 7.01 53.67 11.45C58.74 20.67 72.45 20.93 72.45 32.55L72.45 33.45C72.45 45.07 58.74 45.33 53.67 54.55C51.23 58.99 45.91 64.45 38.61 64.45L35.39 64.45C28.09 64.45 22.77 58.99 20.33 54.55C15.26 45.33 1.55 45.07 1.55 33.45L1.55 32.55C1.55 20.93 15.26 20.67 20.33 11.45C22.77 7.01 28.09 1.55 35.39 1.55Z' fill='none' stroke='%23d09525' stroke-width='2.6' stroke-linejoin='round'/%3E%3C/svg%3E") 32 36 32 36 / calc(32 * var(--k)) calc(36 * var(--k)) / 0 stretch;
   }
-  .ov-link__ico{ width:18px; height:18px; margin-right:10px; vertical-align:-1px; }
+  .ov-link__ico{ flex:none; width:calc(49 * var(--k)); height:calc(49 * var(--k)); margin:0 calc(13 * var(--k)) 0 0; color:var(--gold-ov); }   /* stella ~32px del modello */
+  #review-trigger{ padding-left:0; }
 
   /* gruppo 3 — social */
   .menu-overlay__label{
-    display:block; margin:auto 0 10px;
-    font-family:'Cormorant Garamond', Georgia, serif; font-weight:500;
-    font-size:16px; line-height:1.2; letter-spacing:2px; text-transform:uppercase;
-    text-align:center; color:var(--navy);
+    display:flex; align-items:center; justify-content:center; gap:calc(24 * var(--k));
+    margin:auto 0 calc(36 * var(--k));
+    font-family:'Cormorant Garamond', Georgia, serif; font-weight:600;
+    font-size:calc(29.6 * var(--k)); line-height:1; letter-spacing:calc(3.6 * var(--k));
+    text-transform:uppercase; color:var(--navy-ov);
   }
-  .menu-overlay__social{ margin-top:0; padding-top:0; gap:24px; }
-  .menu-overlay__social .social-dot{ border-width:1px; }   /* bordo più leggero */
-}
+  .menu-overlay__label::before,
+  .menu-overlay__label::after{ content:""; flex:none; width:calc(108 * var(--k)); height:max(1px, calc(2 * var(--k))); }
+  .menu-overlay__label::before{ background:linear-gradient(90deg, rgba(208,149,37,0), var(--gold-soft) 32%); }
+  .menu-overlay__label::after{ margin-left:calc(-3.6 * var(--k)); background:linear-gradient(270deg, rgba(208,149,37,0), var(--gold-soft) 32%); }
+  .menu-overlay__social{ margin:0 0 var(--mb); padding:0; gap:calc(50 * var(--k)); }
+  .menu-overlay__social .social-dot{
+    box-sizing:border-box; width:var(--dot); height:var(--dot);
+    border:max(1px, calc(2 * var(--k))) solid var(--navy-ov); color:var(--navy-ov);
+  }
+  .menu-overlay__social .social-dot > span{ font:700 calc(34 * var(--k))/1 var(--sans); }
+  .menu-overlay__social .social-dot svg{ width:calc(47 * var(--k)); height:calc(47 * var(--k)); }
+  .menu-overlay__social a[aria-label="Tripadvisor"] svg{ stroke-width:2.1; }
+  .menu-overlay__social a[aria-label="Google"] svg{ width:calc(37 * var(--k)); height:calc(37 * var(--k)); stroke-width:2.7; }
 
-/* telefoni con schermo basso: stessa composizione, più compatta */
-@media (max-width:767px) and (max-height:720px){
-  .logo--ov{ --ov-logo-h:84px; margin-top:16px; }
-  .ov-link{ font-size:min(28px, 7.2vw); }
-  .ov-link--main{ padding:8px 22px; }
-  .menu-overlay__nav{ gap:clamp(6px, 1.6vh, 12px); }
+  /* chiusura: X piena, come nel modello */
+  .overlay-close{ position:relative; font-size:0; }
+  .overlay-close::before,.overlay-close::after{
+    content:""; position:absolute; left:50%; top:50%;
+    width:calc(33.2 * var(--k)); height:calc(3.6 * var(--k)); border-radius:calc(1.8 * var(--k));
+    background:var(--navy-ov);
+  }
+  .overlay-close::before{ transform:translate(-50%,-50%) rotate(45deg); }
+  .overlay-close::after{ transform:translate(-50%,-50%) rotate(-45deg); }
 }
 
 /* ============================================================
