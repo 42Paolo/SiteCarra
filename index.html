@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,500;1,600&family=Inter:wght@300;400;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/base.css?v=20261118k" />
+<link rel="stylesheet" href="css/base.css?v=20261118l" />
 
 <style>
 /* ============================================================
@@ -114,14 +114,12 @@
   transition:color .25s ease, opacity .25s ease;
 }
 .tab:hover{ opacity:.85; }
-/* telefono: voci delle categorie nello stesso carattere delle voci del menu di navigazione
-   (Cormorant Garamond 700). Altezza della barra invariata (48px): il padding si adatta al corpo. */
-@media (max-width:767px){
-  .tab{
-    font-family:'Cormorant Garamond', Georgia, serif; font-weight:700;
-    font-size:clamp(12px,3.9vw,15px); letter-spacing:.1em;
-    padding:calc((48px - 1em) / 2) 2px;
-  }
+/* voci delle categorie nello stesso carattere delle voci del menu di navigazione (Cormorant Garamond 700).
+   Altezza della barra invariata (48px): il padding si adatta al corpo. */
+.tab{
+  font-family:'Cormorant Garamond', Georgia, serif; font-weight:700;
+  font-size:clamp(12px,3.9vw,17px); letter-spacing:.1em;
+  padding:calc((48px - 1em) / 2) 2px;
 }
 .tab.is-active{ color:var(--gold-line); opacity:1; }
 .tabs__ink{
@@ -946,7 +944,7 @@ window.IPMenu = (function(){
 
 </div>
 
-<script src="js/overlay.js?v=20261118k"></script>
+<script src="js/overlay.js?v=20261118l"></script>
 <script>
 /* ============================================================
    IN PIAZZA — pagina MENU: comportamenti specifici
