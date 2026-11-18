@@ -2,15 +2,30 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8" />
+<script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#1d4670" />
-<meta name="description" content="In Piazza — cucina di mare alle Caldine, a due passi da Firenze. Antipasti, primi, secondi e dolci freschi del giorno." />
-<title>In Piazza · Cucina di mare</title>
+<meta name="description" content="Dove siamo — In Piazza, cucina di mare alle porte di Firenze: Piazza dei Mezzadri, 50014 Caldine · Fiesole (FI). Come arrivare e come chiamarci." />
+<title>In Piazza · Dove siamo</title>
+
+<link rel="canonical" href="https://42paolo.github.io/SiteCarra/dove-siamo.html" />
+<link rel="icon" href="data:," />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="it_IT" />
+<meta property="og:site_name" content="In Piazza" />
+<meta property="og:title" content="In Piazza · Dove siamo" />
+<meta property="og:description" content="Dove siamo — In Piazza, cucina di mare alle porte di Firenze: Piazza dei Mezzadri, 50014 Caldine · Fiesole (FI). Come arrivare e come chiamarci." />
+<meta property="og:url" content="https://42paolo.github.io/SiteCarra/dove-siamo.html" />
+<meta name="twitter:card" content="summary" />
+
+<!-- risorse critiche della prima schermata: richieste subito, con priorità alta -->
+<link rel="preload" as="image" href="image/separatori/dv_7-1400.webp" media="(max-width: 767.98px)" fetchpriority="high" />
+<link rel="preload" as="image" href="image/separatori/dv_7.webp" media="(min-width: 768px)" fetchpriority="high" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/base.css?v=20261118g" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,500;1,600&family=Inter:wght@300;400;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/base.css?v=20261118k" />
 
 <style>
 /* ============================================================
@@ -46,6 +61,7 @@
   padding:0 var(--pad) 46px;
   background:#0f2338 url('image/separatori/dv_7.webp') center 38% / cover no-repeat;
 }
+@media (max-width:767px){ .dove-hero{ background-image:url('image/separatori/dv_7-1400.webp'); } }
 .dove-hero::before{
   content:""; position:absolute; inset:0;
   background:linear-gradient(180deg,
@@ -190,6 +206,7 @@
 </head>
 
 <body>
+<script>try{var t=+sessionStorage.getItem('ip-menu-return');sessionStorage.removeItem('ip-menu-return');if(t&&Date.now()-t<8000)document.body.classList.add('menu-open','menu-instant')}catch(e){}</script>
 <div class="app">
 
   <!-- ===== BARRA SUPERIORE (stessa identità dell'header) ===== -->
@@ -249,7 +266,7 @@
       <p class="dove__quote">Il mare non ha paese nemmeno lui,<br/>ed è di tutti quelli che lo sanno ascoltare.</p>
     </section>
   </main>
-  <div class="menu-overlay" id="overlay-menu" aria-hidden="true" inert>
+  <div class="menu-overlay" id="overlay-menu" role="dialog" aria-modal="true" aria-label="Menu principale" aria-hidden="true" inert>
     <div class="wave-curtain" aria-hidden="true">
       <svg class="wave-curtain__edge" viewBox="0 0 1440 170" preserveAspectRatio="none">
         <path class="wave-front" d="M0,0 H1440 V104 C1250,158 1040,74 840,110 C660,142 360,70 0,108 Z"/>
@@ -260,7 +277,7 @@
     </div>
 
     <div class="menu-overlay__skyline" aria-hidden="true">
-      <div class="menu-overlay__skyline-in"><img src="image/sfondi/overlay-porto-venere.webp" alt="" decoding="async" /></div>
+      <div class="menu-overlay__skyline-in"><img src="image/sfondi/overlay-porto-venere.webp" alt="" width="2000" height="667" loading="lazy" decoding="async" /></div>
     </div>
     <div class="menu-overlay__bar">
       <button class="overlay-close" type="button" aria-label="Chiudi il menu">&times;</button>
@@ -282,7 +299,7 @@
   </div>
 
   <!-- ===== MODAL RECENSIONI (Google / Tripadvisor) ===== -->
-  <div class="review-modal" id="review-modal" aria-hidden="true" inert>
+  <div class="review-modal" id="review-modal" role="dialog" aria-modal="true" aria-label="Lascia una recensione" aria-hidden="true" inert>
     <div class="review-modal__panel">
       <button type="button" class="review-modal__close" aria-label="Chiudi">&times;</button>
       <a class="review-card" href="https://maps.app.goo.gl/5trc5QQUGpTFEYTVA" target="_blank" rel="noopener">
@@ -309,6 +326,6 @@
 
 </div>
 
-<script src="js/overlay.js?v=20261118g"></script>
+<script src="js/overlay.js?v=20261118k"></script>
 </body>
 </html>

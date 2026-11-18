@@ -2,15 +2,33 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8" />
+<script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#1d4670" />
 <meta name="description" content="In Piazza — cucina di mare alle Caldine, a due passi da Firenze. Antipasti, primi, secondi e dolci freschi del giorno." />
 <title>In Piazza · Cucina di mare</title>
 
+<link rel="canonical" href="https://42paolo.github.io/SiteCarra/" />
+<link rel="icon" href="data:," />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="it_IT" />
+<meta property="og:site_name" content="In Piazza" />
+<meta property="og:title" content="In Piazza · Cucina di mare" />
+<meta property="og:description" content="In Piazza — cucina di mare alle Caldine, a due passi da Firenze. Antipasti, primi, secondi e dolci freschi del giorno." />
+<meta property="og:url" content="https://42paolo.github.io/SiteCarra/" />
+<meta name="twitter:card" content="summary" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Restaurant","name":"In Piazza","url":"https://42paolo.github.io/SiteCarra/","description":"Cucina di mare alle Caldine, a due passi da Firenze.","servesCuisine":"Cucina di mare","telephone":"+39 055541114","address":{"@type":"PostalAddress","streetAddress":"Piazza dei Mezzadri","postalCode":"50014","addressLocality":"Caldine","addressRegion":"FI","addressCountry":"IT"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"12:00","closes":"23:00"}],"hasMap":"https://maps.app.goo.gl/5trc5QQUGpTFEYTVA","hasMenu":"https://42paolo.github.io/SiteCarra/#antipasti","sameAs":["https://www.facebook.com/InPiazzaCaldine/","https://www.tripadvisor.com/Restaurant_Review-g12083518-d15848178-Reviews-In_Piazza-Caldine_Tuscany.html"]}
+</script>
+
+<!-- risorse critiche della prima schermata: richieste subito, con priorità alta -->
+<link rel="preload" as="image" href="image/sfondi/bg-antipasti.webp" media="(max-width: 767.98px)" fetchpriority="high" />
+<link rel="preload" as="image" media="(min-width: 768px)" href="image/piatti/covaccino-pesto.webp" imagesrcset="image/piatti/covaccino-pesto-450.webp 450w, image/piatti/covaccino-pesto.webp 900w" imagesizes="(min-width:1024px) 440px, 45vw" fetchpriority="high" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/base.css?v=20261118g" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,500;1,600&family=Inter:wght@300;400;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/base.css?v=20261118k" />
 
 <style>
 /* ============================================================
@@ -96,6 +114,15 @@
   transition:color .25s ease, opacity .25s ease;
 }
 .tab:hover{ opacity:.85; }
+/* telefono: voci delle categorie nello stesso carattere delle voci del menu di navigazione
+   (Cormorant Garamond 700). Altezza della barra invariata (48px): il padding si adatta al corpo. */
+@media (max-width:767px){
+  .tab{
+    font-family:'Cormorant Garamond', Georgia, serif; font-weight:700;
+    font-size:clamp(12px,3.9vw,15px); letter-spacing:.1em;
+    padding:calc((48px - 1em) / 2) 2px;
+  }
+}
 .tab.is-active{ color:var(--gold-line); opacity:1; }
 .tabs__ink{
   position:absolute; left:0; bottom:-1px; height:2.5px; width:0;
@@ -201,7 +228,6 @@ main{ overflow-x:clip; }
   background-repeat:no-repeat;
   padding-bottom:200px;
 }
-#dolci + .separator{ display:none; }
 
 .cat-head{ position:relative; margin-bottom:26px; }
 .cat-title{ font-family:var(--serif); font-style:italic; font-weight:500;
@@ -277,9 +303,14 @@ main{ overflow-x:clip; }
 .photo-sep--antipasti{ background-image:url('image/separatori/dv_10.webp'); }
 .photo-sep--secondi{ background-image:url('image/separatori/dv_5.webp'); }
 .photo-sep--dv6{ background-image:url('image/separatori/dv_6.webp'); }
-.photo-sep--dv8{ background-image:url('image/separatori/dv_8.webp'); }
 .photo-sep--dv9{ background-image:url('image/separatori/dv_9.webp'); }
-/* separatore foto INLINE (dentro la lista piatti) — sborda a tutta larghezza, flush */
+/* telefono: versioni a 1400px (bastano fino a ~470px a 3x) — stessa foto, meno byte */
+@media (max-width:767px){
+  .photo-sep--antipasti{ background-image:url('image/separatori/dv_10-1400.webp'); }
+  .photo-sep--secondi{ background-image:url('image/separatori/dv_5-1400.webp'); }
+  .photo-sep--dv6{ background-image:url('image/separatori/dv_6-1400.webp'); }
+  .photo-sep--dv9{ background-image:url('image/separatori/dv_9-1400.webp'); }
+}/* separatore foto INLINE (dentro la lista piatti) — sborda a tutta larghezza, flush */
 .photo-sep--inline{ width:calc(100% + 2*var(--pad)); margin:25px calc(-1*var(--pad)); }
 /* sezioni adiacenti ai separatori-foto: nessun padding verso la foto (niente spazio) */
 .category[data-cat="antipasti"]{ padding-bottom:0; }
@@ -296,6 +327,7 @@ main{ overflow-x:clip; }
   /* animazioni legate allo SCROLL (involontarie): disattivate, i contenuti compaiono subito */
   .js .plate-block, .js .text-block, .js .cat-head{ opacity:1 !important; transform:none !important; transition:none !important; }
   .dish__kicker::after{ transform:scaleX(1) !important; transition:none !important; }
+  .btn-chisiamo{ animation:none; }          /* il "glint" dorato è un'animazione infinita: ferma */
 }
 
 /* ============================================================
@@ -438,7 +470,7 @@ main{ overflow-x:clip; }
   .side-nav__place{ font:600 11px/1.4 var(--sans); letter-spacing:.14em; text-transform:uppercase; color:var(--navy); margin:0 0 4px; }
   .side-nav__tag{ font-size:10.5px; letter-spacing:.05em; color:var(--ink-soft); margin:0; }
 
-  main{ margin-left:var(--side-w); }
+  main,.site-footer{ margin-left:var(--side-w); }
 
   /* apertura di ogni categoria: un po' più di respiro, ora che ogni piatto
      è "a tutto schermo" -> deve reggere il confronto */
@@ -562,197 +594,17 @@ main{ overflow-x:clip; }
 </head>
 
 <body>
-<div class="app" id="top">
-
-  <!-- ===== HEADER STICKY (collassa allo scroll) ===== -->
-  <header class="site-header" id="header" data-cat="antipasti">
-    <div class="header__hero">
-      <div class="hero__bg" aria-hidden="true"></div>
-
-      <button class="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="overlay-menu">
-        <span></span><span></span><span></span>
-      </button>
-
-      <div class="logo logo--img"><div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div></div>
-    </div>
-
-    <nav class="tabs" id="tabs" aria-label="Categorie del menu">
-      <a class="tab is-active" href="#antipasti" data-target="antipasti">Antipasti</a>
-      <a class="tab"           href="#primi"     data-target="primi">Primi</a>
-      <a class="tab"           href="#secondi"   data-target="secondi">Secondi</a>
-      <a class="tab"           href="#dolci"     data-target="dolci">Dolci</a>
-      <span class="tabs__ink" aria-hidden="true"></span>
-    </nav>
-  </header>
-
-  <!-- ===== BARRA + SIDEBAR DESKTOP (solo ≥1024px, sostituisce l'header mobile qui sopra) ===== -->
-  <header class="desktop-bar">
-    <button class="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="overlay-menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="desktop-bar__logo logo logo--img"><div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div></div>
-    <span class="desktop-bar__progress" aria-hidden="true"></span>
-  </header>
-
-  <nav class="side-nav" aria-label="Categorie del menu">
-    <a class="side-link" href="#top" data-target="home">Home</a>
-    <a class="side-link is-active" href="#antipasti" data-target="antipasti">Antipasti</a>
-    <a class="side-link" href="#primi" data-target="primi">Primi</a>
-    <a class="side-link" href="#secondi" data-target="secondi">Secondi</a>
-    <a class="side-link" href="#dolci" data-target="dolci">Dolci</a>
-    <svg class="side-nav__wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    <div class="side-nav__foot">
-      <svg class="side-nav__fish" viewBox="0 0 96 30" fill="none" aria-hidden="true">
-        <path d="M30 15 L22 8 L26 15 L22 22 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M30 15 Q48 4 72 15 Q48 26 30 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        <circle cx="63" cy="12.5" r="1.4" fill="currentColor"/>
-      </svg>
-      <p class="side-nav__place">Caldine · Fiesole</p>
-      <p class="side-nav__tag">Cucina di mare, radici a Porto Venere</p>
-    </div>
-  </nav>
-
-  <main>
-    <!-- ---------- ANTIPASTI ---------- -->
-    <section id="antipasti" class="category" data-cat="antipasti" aria-labelledby="t-anti">
-      <div class="cat-head">
-        <h2 id="t-anti" class="cat-title">Antipasti</h2>
-        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <p class="cat-sub">Il nostro inizio di mare:<br/>fresco, leggero, autentico.</p>
-        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <div class="dish-list" data-cat="antipasti"></div>
-    </section>
-
-    <div class="photo-sep photo-sep--antipasti" role="img" aria-label="Porto Venere"></div>
-
-    <!-- ---------- PRIMI ---------- -->
-    <section id="primi" class="category" data-cat="primi" aria-labelledby="t-primi">
-      <div class="cat-head">
-        <h2 id="t-primi" class="cat-title">Primi</h2>
-        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <p class="cat-sub">La tradizione di mare<br/>che profuma di Mediterraneo.</p>
-        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <div class="dish-list" data-cat="primi"></div>
-      <div class="primi-cta">
-        <a class="btn-chisiamo" href="chi-siamo.html">Chi Siamo</a>
-      </div>
-      <div class="fade-to-secondi" aria-hidden="true"></div>
-    </section>
-
-    <!-- ---------- SECONDI ---------- -->
-    <section id="secondi" class="category" data-cat="secondi" aria-labelledby="t-sec">
-      <div class="cat-head">
-        <h2 id="t-sec" class="cat-title">Secondi</h2>
-        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <p class="cat-sub">Il pescato che diventa piatto:<br/>schietto e generoso.</p>
-        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <div class="dish-list" data-cat="secondi"></div>
-    </section>
-
-    <div class="photo-sep photo-sep--secondi" role="img" aria-label="Porto Venere"></div>
-
-    <!-- ---------- DOLCI ---------- -->
-    <section id="dolci" class="category" data-cat="dolci" aria-labelledby="t-dolci">
-      <div class="cat-head">
-        <h2 id="t-dolci" class="cat-title">Dolci</h2>
-        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <p class="cat-sub">La dolcezza per chiudere:<br/>classici e tentazioni del giorno.</p>
-        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <div class="dish-list" data-cat="dolci"></div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="site-footer" id="prenota">
-      <svg class="footer__fish" viewBox="0 0 96 30" fill="none" aria-hidden="true">
-        <path d="M30 15 L22 8 L26 15 L22 22 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M30 15 Q48 4 72 15 Q48 26 30 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        <circle cx="63" cy="12.5" r="1.4" fill="currentColor"/>
-      </svg>
-      <p class="footer__name">In Piazza</p>
-      <p class="footer__line">Piazza dei Mezzadri · 50014 Caldine (FI)</p>
-      <p class="footer__line">Aperto tutti i giorni · 12:00 – 23:00</p>
-      <div class="footer__social" data-social></div>
-    </footer>
-  </main>
-
-  <!-- ===== OVERLAY MENU ===== -->
-  <div class="menu-overlay" id="overlay-menu" aria-hidden="true" inert>
-    <div class="wave-curtain" aria-hidden="true">
-      <svg class="wave-curtain__edge" viewBox="0 0 1440 170" preserveAspectRatio="none">
-        <path class="wave-front" d="M0,0 H1440 V104 C1250,158 1040,74 840,110 C660,142 360,70 0,108 Z"/>
-        <path class="wave-mid"   d="M0,0 H1440 V76 C1240,128 1020,58 800,88 C600,116 320,52 0,82 Z"/>
-        <path class="wave-back"  d="M0,0 H1440 V50 C1250,96 1030,38 820,64 C620,88 300,34 0,56 Z"/>
-        <path class="wave-foam"  d="M1440,104 C1250,158 1040,74 840,110 C660,142 360,70 0,108"/>
-      </svg>
-    </div>
-
-    <div class="menu-overlay__skyline" aria-hidden="true">
-      <div class="menu-overlay__skyline-in"><img src="image/sfondi/overlay-porto-venere.webp" alt="" decoding="async" /></div>
-    </div>
-    <div class="menu-overlay__bar">
-      <button class="overlay-close" type="button" aria-label="Chiudi il menu">&times;</button>
-    </div>
-    <div class="logo logo--ov">
-      <div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div>
-      <p class="logo__tagline">Ristorante di mare · Caldine</p>
-    </div>
-    <nav class="menu-overlay__nav" aria-label="Navigazione principale">
-      <a href="chi-siamo.html" class="ov-link">Chi siamo</a>
-      <a href="dove-siamo.html" class="ov-link">Dove siamo</a>
-      <a href="#antipasti" class="ov-link ov-link--gold" aria-current="page">Menu Galleria</a>
-      <button type="button" class="ov-link" id="review-trigger">
-        <svg class="ov-link__ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"/></svg>Recensisci
-      </button>
-    </nav>
-    <p class="menu-overlay__label">Seguici</p>
-    <div class="menu-overlay__social" data-social></div>
-  </div>
-
-  <!-- ===== MODAL RECENSIONI (Google / Tripadvisor) ===== -->
-  <div class="review-modal" id="review-modal" aria-hidden="true" inert>
-    <div class="review-modal__panel">
-      <button type="button" class="review-modal__close" aria-label="Chiudi">&times;</button>
-      <a class="review-card" href="https://maps.app.goo.gl/5trc5QQUGpTFEYTVA" target="_blank" rel="noopener">
-        <svg class="review-card__ico" viewBox="0 0 48 48" aria-hidden="true">
-          <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
-          <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
-          <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/>
-          <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
-        </svg>
-        <span class="review-card__label">Google</span>
-      </a>
-      <a class="review-card" href="https://www.tripadvisor.com/Restaurant_Review-g12083518-d15848178-Reviews-In_Piazza-Caldine_Tuscany.html" target="_blank" rel="noopener">
-        <svg class="review-card__ico" viewBox="0 0 48 32" aria-hidden="true" fill="none">
-          <circle cx="12" cy="16" r="11" stroke="#34C12E" stroke-width="2.5"/>
-          <circle cx="36" cy="16" r="11" stroke="#34C12E" stroke-width="2.5"/>
-          <circle cx="12" cy="16" r="4.2" fill="#34C12E"/>
-          <circle cx="36" cy="16" r="4.2" fill="#34C12E"/>
-          <path d="M18 8 Q24 3 30 8" stroke="#34C12E" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <span class="review-card__label">Tripadvisor</span>
-      </a>
-    </div>
-  </div>
-
-</div>
-
-<script src="js/overlay.js?v=20261118g"></script>
+<script>try{var t=+sessionStorage.getItem('ip-menu-return');sessionStorage.removeItem('ip-menu-return');if(t&&Date.now()-t<8000)document.body.classList.add('menu-open','menu-instant')}catch(e){}</script>
 <script>
 /* ============================================================
-   IN PIAZZA — pagina MENU: comportamenti specifici
-   (hamburger, menu overlay e modal recensioni sono in js/overlay.js)
-   - Menu data-driven: i piatti vivono in MENU, il layout (blocchi masonry +
-     divisori a onde ogni 5 piatti) è calcolato -> scalabile.
-   - Header sticky che collassa (espanso <-> compatto)
-   - Scroll-spy con underline animato + sfondo hero per categoria,
-     e stato attivo sincronizzato sulla sidebar desktop
-   - Reveal animato all'ingresso in viewport
+   IN PIAZZA — dati del menu e rendering (pagina MENU)
+   Gli array in MENU sono la fonte unica: blocchi masonry e divisori si
+   ricalcolano da soli. Ogni categoria viene disegnata da una chiamata
+   IPMenu.render('…') subito dopo il proprio contenitore .dish-list, nell'ordine
+   del documento: i piatti compaiono mentre la pagina viene letta, senza mai
+   spostare contenuti già mostrati (niente salti di layout).
    ============================================================ */
-(function(){
+window.IPMenu = (function(){
   'use strict';
 
   /* ---------- DATI MENU ----------
@@ -816,11 +668,21 @@ main{ overflow-x:clip; }
     });
   }
 
-  /* foto (placeholder) — elemento a sé, sborda dal lato esterno della colonna */
+  /* foto del piatto — elemento a sé, sborda dal lato esterno della colonna.
+     Due versioni (450px e 900px): il browser sceglie in base a schermo e densità.
+     La prima foto della pagina è quella visibile subito: niente lazy-loading, priorità alta. */
+  var eagerImgs = 1;
   function plateHTML(side, d){
-    var inner = d.img
-      ? '<div class="plate plate--photo"><img src="'+esc(d.img)+'" alt="'+esc(d.n)+'" loading="lazy" decoding="async" /></div>'
-      : '<div class="plate"><span class="plate__label">Foto piatto</span></div>';
+    var inner;
+    if(d.img){
+      var eager = eagerImgs > 0; if(eager) eagerImgs--;
+      var small = d.img.replace(/\.webp$/, '-450.webp');
+      inner = '<div class="plate plate--photo"><img src="'+esc(d.img)+'" srcset="'+esc(small)+' 450w, '+esc(d.img)+' 900w"'
+        + ' sizes="(min-width:1024px) 440px, 45vw" width="900" height="900" alt="'+esc(d.n)+'" decoding="async"'
+        + (eager ? ' fetchpriority="high"' : ' loading="lazy"') + ' /></div>';
+    } else {
+      inner = '<div class="plate"><span class="plate__label">Foto piatto</span></div>';
+    }
     return '<div class="plate-block plate-block--'+side+(d.feature ? ' plate-block--feature' : '')+'">'+inner+'</div>';
   }
 
@@ -884,20 +746,221 @@ main{ overflow-x:clip; }
     var blocks = chunk(data, catId);
     var html = '';
     blocks.forEach(function(b, idx){
-      html += '<div class="dish-block" data-block-idx="'+idx+'">';
+      html += '<div class="dish-block" data-block-idx="'+idx+'" data-lazy>';
       html += blockHTML(b, catId);
       html += '</div>';
       if(idx < blocks.length - 1){
         var inlineCls = INLINE_PHOTO[catId];
         html += inlineCls
-          ? '<div class="photo-sep photo-sep--inline '+inlineCls+'" role="img" aria-label="Porto Venere"></div>'
+          ? '<div class="photo-sep photo-sep--inline '+inlineCls+'" aria-hidden="true" data-lazy></div>'
           : inlineSeparatorHTML();
       }
     });
     host.innerHTML = html;
   }
 
-  Object.keys(MENU).forEach(renderCategory);   /* popola tutte le categorie PRIMA di osservare/misurare */
+  return { render: renderCategory };
+})();
+</script>
+<div class="app" id="top">
+
+  <!-- ===== HEADER STICKY (collassa allo scroll) ===== -->
+  <header class="site-header" id="header" data-cat="antipasti">
+    <div class="header__hero">
+      <div class="hero__bg" aria-hidden="true"></div>
+
+      <button class="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="overlay-menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="logo logo--img"><div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div></div>
+    </div>
+
+    <nav class="tabs" id="tabs" aria-label="Categorie del menu">
+      <a class="tab is-active" href="#antipasti" data-target="antipasti">Antipasti</a>
+      <a class="tab"           href="#primi"     data-target="primi">Primi</a>
+      <a class="tab"           href="#secondi"   data-target="secondi">Secondi</a>
+      <a class="tab"           href="#dolci"     data-target="dolci">Dolci</a>
+      <span class="tabs__ink" aria-hidden="true"></span>
+    </nav>
+  </header>
+
+  <!-- ===== BARRA + SIDEBAR DESKTOP (solo ≥1024px, sostituisce l'header mobile qui sopra) ===== -->
+  <header class="desktop-bar">
+    <button class="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="overlay-menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="desktop-bar__logo logo logo--img"><div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div></div>
+    <span class="desktop-bar__progress" aria-hidden="true"></span>
+  </header>
+
+  <nav class="side-nav" aria-label="Categorie del menu">
+    <a class="side-link" href="#top" data-target="home">Home</a>
+    <a class="side-link is-active" href="#antipasti" data-target="antipasti">Antipasti</a>
+    <a class="side-link" href="#primi" data-target="primi">Primi</a>
+    <a class="side-link" href="#secondi" data-target="secondi">Secondi</a>
+    <a class="side-link" href="#dolci" data-target="dolci">Dolci</a>
+    <svg class="side-nav__wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <div class="side-nav__foot">
+      <svg class="side-nav__fish" viewBox="0 0 96 30" fill="none" aria-hidden="true">
+        <path d="M30 15 L22 8 L26 15 L22 22 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M30 15 Q48 4 72 15 Q48 26 30 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="63" cy="12.5" r="1.4" fill="currentColor"/>
+      </svg>
+      <p class="side-nav__place">Caldine · Fiesole</p>
+      <p class="side-nav__tag">Cucina di mare, radici a Porto Venere</p>
+    </div>
+  </nav>
+
+  <main>
+    <h1 class="sr-only">In Piazza · Cucina di mare</h1>
+
+    <!-- ---------- ANTIPASTI ---------- -->
+    <section id="antipasti" class="category" data-cat="antipasti" aria-labelledby="t-anti">
+      <div class="cat-head">
+        <h2 id="t-anti" class="cat-title">Antipasti</h2>
+        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p class="cat-sub">Il nostro inizio di mare:<br/>fresco, leggero, autentico.</p>
+        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="dish-list" data-cat="antipasti"></div>
+      <script>IPMenu.render('antipasti')</script>
+    </section>
+
+    <div class="photo-sep photo-sep--antipasti" aria-hidden="true" data-lazy></div>
+
+    <!-- ---------- PRIMI ---------- -->
+    <section id="primi" class="category" data-cat="primi" data-lazy aria-labelledby="t-primi">
+      <div class="cat-head">
+        <h2 id="t-primi" class="cat-title">Primi</h2>
+        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p class="cat-sub">La tradizione di mare<br/>che profuma di Mediterraneo.</p>
+        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="dish-list" data-cat="primi"></div>
+      <script>IPMenu.render('primi')</script>
+      <div class="primi-cta">
+        <a class="btn-chisiamo" href="chi-siamo.html">Chi Siamo</a>
+      </div>
+      <div class="fade-to-secondi" aria-hidden="true"></div>
+    </section>
+
+    <!-- ---------- SECONDI ---------- -->
+    <section id="secondi" class="category" data-cat="secondi" data-lazy aria-labelledby="t-sec">
+      <div class="cat-head">
+        <h2 id="t-sec" class="cat-title">Secondi</h2>
+        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p class="cat-sub">Il pescato che diventa piatto:<br/>schietto e generoso.</p>
+        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="dish-list" data-cat="secondi"></div>
+      <script>IPMenu.render('secondi')</script>
+    </section>
+
+    <div class="photo-sep photo-sep--secondi" aria-hidden="true" data-lazy></div>
+
+    <!-- ---------- DOLCI ---------- -->
+    <section id="dolci" class="category" data-cat="dolci" data-lazy aria-labelledby="t-dolci">
+      <div class="cat-head">
+        <h2 id="t-dolci" class="cat-title">Dolci</h2>
+        <svg class="cat-wave" viewBox="0 0 60 10" aria-hidden="true"><path d="M3 6 q7 -6 14 0 q7 6 14 0 q7 -6 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p class="cat-sub">La dolcezza per chiudere:<br/>classici e tentazioni del giorno.</p>
+        <svg class="cat-doodle" viewBox="0 0 60 22" fill="none" aria-hidden="true"><path d="M2 12 q9 -8 16 0 M24 9 q8 -7 15 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="dish-list" data-cat="dolci"></div>
+      <script>IPMenu.render('dolci')</script>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="prenota">
+    <svg class="footer__fish" viewBox="0 0 96 30" fill="none" aria-hidden="true">
+      <path d="M30 15 L22 8 L26 15 L22 22 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M30 15 Q48 4 72 15 Q48 26 30 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="63" cy="12.5" r="1.4" fill="currentColor"/>
+    </svg>
+    <p class="footer__name">In Piazza</p>
+    <p class="footer__line">Piazza dei Mezzadri · 50014 Caldine (FI)</p>
+    <p class="footer__line">Aperto tutti i giorni · 12:00 – 23:00</p>
+    <div class="footer__social" data-social></div>
+  </footer>
+
+  <!-- ===== OVERLAY MENU ===== -->
+  <div class="menu-overlay" id="overlay-menu" role="dialog" aria-modal="true" aria-label="Menu principale" aria-hidden="true" inert>
+    <div class="wave-curtain" aria-hidden="true">
+      <svg class="wave-curtain__edge" viewBox="0 0 1440 170" preserveAspectRatio="none">
+        <path class="wave-front" d="M0,0 H1440 V104 C1250,158 1040,74 840,110 C660,142 360,70 0,108 Z"/>
+        <path class="wave-mid"   d="M0,0 H1440 V76 C1240,128 1020,58 800,88 C600,116 320,52 0,82 Z"/>
+        <path class="wave-back"  d="M0,0 H1440 V50 C1250,96 1030,38 820,64 C620,88 300,34 0,56 Z"/>
+        <path class="wave-foam"  d="M1440,104 C1250,158 1040,74 840,110 C660,142 360,70 0,108"/>
+      </svg>
+    </div>
+
+    <div class="menu-overlay__skyline" aria-hidden="true">
+      <div class="menu-overlay__skyline-in"><img src="image/sfondi/overlay-porto-venere.webp" alt="" width="2000" height="667" loading="lazy" decoding="async" /></div>
+    </div>
+    <div class="menu-overlay__bar">
+      <button class="overlay-close" type="button" aria-label="Chiudi il menu">&times;</button>
+    </div>
+    <div class="logo logo--ov">
+      <div class="logo-mark" role="img" aria-label="In Piazza Café del Mar"></div>
+      <p class="logo__tagline">Ristorante di mare · Caldine</p>
+    </div>
+    <nav class="menu-overlay__nav" aria-label="Navigazione principale">
+      <a href="chi-siamo.html" class="ov-link">Chi siamo</a>
+      <a href="dove-siamo.html" class="ov-link">Dove siamo</a>
+      <a href="#antipasti" class="ov-link ov-link--gold" aria-current="page">Menu Galleria</a>
+      <button type="button" class="ov-link" id="review-trigger">
+        <svg class="ov-link__ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"/></svg>Recensisci
+      </button>
+    </nav>
+    <p class="menu-overlay__label">Seguici</p>
+    <div class="menu-overlay__social" data-social></div>
+  </div>
+
+  <!-- ===== MODAL RECENSIONI (Google / Tripadvisor) ===== -->
+  <div class="review-modal" id="review-modal" role="dialog" aria-modal="true" aria-label="Lascia una recensione" aria-hidden="true" inert>
+    <div class="review-modal__panel">
+      <button type="button" class="review-modal__close" aria-label="Chiudi">&times;</button>
+      <a class="review-card" href="https://maps.app.goo.gl/5trc5QQUGpTFEYTVA" target="_blank" rel="noopener">
+        <svg class="review-card__ico" viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+          <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+          <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/>
+          <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+        </svg>
+        <span class="review-card__label">Google</span>
+      </a>
+      <a class="review-card" href="https://www.tripadvisor.com/Restaurant_Review-g12083518-d15848178-Reviews-In_Piazza-Caldine_Tuscany.html" target="_blank" rel="noopener">
+        <svg class="review-card__ico" viewBox="0 0 48 32" aria-hidden="true" fill="none">
+          <circle cx="12" cy="16" r="11" stroke="#34C12E" stroke-width="2.5"/>
+          <circle cx="36" cy="16" r="11" stroke="#34C12E" stroke-width="2.5"/>
+          <circle cx="12" cy="16" r="4.2" fill="#34C12E"/>
+          <circle cx="36" cy="16" r="4.2" fill="#34C12E"/>
+          <path d="M18 8 Q24 3 30 8" stroke="#34C12E" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="review-card__label">Tripadvisor</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/overlay.js?v=20261118k"></script>
+<script>
+/* ============================================================
+   IN PIAZZA — pagina MENU: comportamenti specifici
+   (hamburger, menu overlay e modal recensioni sono in js/overlay.js)
+   - Menu data-driven: i piatti vivono in MENU (script in testa al body), il layout
+     (blocchi masonry + divisori a onde ogni 5 piatti) è calcolato -> scalabile.
+   - Header sticky che collassa (espanso <-> compatto)
+   - Scroll-spy con underline animato + sfondo hero per categoria,
+     e stato attivo sincronizzato sulla sidebar desktop
+   - Reveal animato all'ingresso in viewport
+   ============================================================ */
+(function(){
+  'use strict';
+
 
   var HERO_CMP     = 62;                   /* deve combaciare con --hero-cmp */
   var SCROLL_RANGE = 180;                  /* px su cui avviene il collasso: più ampio = più graduale */
@@ -910,6 +973,8 @@ main{ overflow-x:clip; }
   var ink         = tabsNav.querySelector('.tabs__ink');
   var sections    = Array.prototype.slice.call(document.querySelectorAll('.category'));
   var current     = null;
+  var reduceMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches:false };
+  function smooth(){ return reduceMotion.matches ? 'auto' : 'smooth'; }
 
   /* altezza barra sticky attualmente visibile -> scroll-margin delle sezioni
      (req. #3: niente clip). Su desktop è la barra fissa, non l'header mobile. */
@@ -946,25 +1011,28 @@ main{ overflow-x:clip; }
   }
 
   function onScroll(){
-    /* 1. header: progress continuo 0→1 lungo SCROLL_RANGE px */
-    var p = Math.min(1, Math.max(0, window.scrollY / SCROLL_RANGE));
+    /* 1. letture (layout) — tutte insieme, prima di qualunque scrittura: così il browser
+       non deve ricalcolare il layout in modo sincrono a ogni frame di scroll */
+    var y = window.scrollY;
+    /* scroll-spy: sezione sotto al bordo inferiore della barra sticky attualmente visibile
+       (header mobile o barra desktop: quella nascosta ha bottom=0, quindi "||" prende
+       sempre quella giusta). */
+    var barBottom = header.getBoundingClientRect().bottom || (desktopBar ? desktopBar.getBoundingClientRect().bottom : 0);
+    var line = y + barBottom + 16;
+    var id = sections[0].id;
+    for(var i=0;i<sections.length;i++){ if(sections[i].offsetTop <= line) id = sections[i].id; }
+    var max = progressBar ? document.documentElement.scrollHeight - window.innerHeight : 0;
+
+    /* 2. scritture */
+    /* header: progress continuo 0→1 lungo SCROLL_RANGE px */
+    var p = Math.min(1, Math.max(0, y / SCROLL_RANGE));
     header.style.setProperty('--scroll-p', p);
     /* is-compact solo a fine corsa (box-shadow, sole, skyline) */
     header.classList.toggle('is-compact', p >= 1);
-
-    /* 2. scroll-spy: sezione sotto al bordo inferiore della barra sticky
-       attualmente visibile (header mobile o barra desktop: quella nascosta
-       ha bottom=0, quindi "||" prende sempre quella giusta). */
-    var barBottom = header.getBoundingClientRect().bottom || (desktopBar ? desktopBar.getBoundingClientRect().bottom : 0);
-    var line = window.scrollY + barBottom + 16;
-    var id = sections[0].id;
-    for(var i=0;i<sections.length;i++){ if(sections[i].offsetTop <= line) id = sections[i].id; }
     setActive(id);
-
-    /* 3. filo di lettura nella barra desktop: quanto manca alla fine del menu */
+    /* filo di lettura nella barra desktop: quanto manca alla fine del menu */
     if(progressBar){
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      var pct = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) * 100 : 0;
+      var pct = max > 0 ? Math.min(1, Math.max(0, y / max)) * 100 : 0;
       progressBar.style.width = pct + '%';
     }
   }
@@ -977,7 +1045,7 @@ main{ overflow-x:clip; }
     tab.addEventListener('click', function(e){
       e.preventDefault();
       var sec = document.getElementById(tab.dataset.target);
-      if(sec) sec.scrollIntoView({ behavior:'smooth', block:'start' });
+      if(sec) sec.scrollIntoView({ behavior:smooth(), block:'start' });
     });
   });
 
@@ -987,9 +1055,9 @@ main{ overflow-x:clip; }
   sideLinks.forEach(function(link){
     link.addEventListener('click', function(e){
       e.preventDefault();
-      if(link.dataset.target === 'home'){ window.scrollTo({ top:0, behavior:'smooth' }); return; }
+      if(link.dataset.target === 'home'){ window.scrollTo({ top:0, behavior:smooth() }); return; }
       var sec = document.getElementById(link.dataset.target);
-      if(sec) sec.scrollIntoView({ behavior:'smooth', block:'start' });
+      if(sec) sec.scrollIntoView({ behavior:smooth(), block:'start' });
     });
   });
 
@@ -1001,6 +1069,17 @@ main{ overflow-x:clip; }
     document.querySelectorAll('.plate-block, .text-block, .cat-head').forEach(function(el){ io.observe(el); });
   } else {
     document.querySelectorAll('.plate-block, .text-block, .cat-head').forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  /* sfondi illustrati e foto-separatore: si caricano quando mancano ~1,5 schermate */
+  var lazyBg = document.querySelectorAll('[data-lazy]');
+  if('IntersectionObserver' in window){
+    var bgIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('is-loaded'); bgIo.unobserve(en.target); } });
+    }, { rootMargin:'1400px 0px 1400px 0px' });
+    lazyBg.forEach(function(el){ bgIo.observe(el); });
+  } else {
+    lazyBg.forEach(function(el){ el.classList.add('is-loaded'); });
   }
 
   /* init */

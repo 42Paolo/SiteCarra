@@ -43,6 +43,15 @@ Il logo ("In Piazza · Café del Mar" + stella) è definito **una volta sola**, 
 
 GitHub Pages fa tenere ai browser i file per ~10 minuti. Per evitare che dopo una modifica un visitatore veda l'HTML nuovo con il CSS/JS vecchio (es. logo sparito), le pagine richiamano `css/base.css?v=…` e `js/overlay.js?v=…`: **quando modifichi `css/base.css` o `js/overlay.js`, cambia il numero `v=` in tutte e tre le pagine** (basta un nuovo valore, es. la data).
 
+## Note tecniche (ottimizzazione e accessibilità)
+
+- **Immagini dei piatti:** ogni foto esiste in due misure, `nome.webp` (900 px) e `nome-450.webp` (450 px); l'HTML usa `srcset`/`sizes`, quindi il telefono scarica la versione piccola. Aggiungendo un piatto, esporta entrambe le misure con questa convenzione di nome. I separatori panoramici hanno una variante `*-1400.webp` per il mobile.
+- **Sfondi a caricamento differito:** gli elementi con `data-lazy` ricevono lo sfondo solo quando servono (classe `.is-loaded`, via IntersectionObserver); lo sfondo del menu mobile si carica a pagina finita o quando l'utente tocca l'hamburger.
+- **Menu in `index.html`:** i dati dei piatti sono resi in ordine da `window.IPMenu.render('antipasti'|'primi'|'secondi'|'dolci')` (uno script dopo ogni `.dish-list`), così la pagina non si sposta mentre carica.
+- **Menu a tendina e navigazione tra pagine:** cliccando una voce che porta in un'altra pagina, `js/overlay.js` salva un segnale in `sessionStorage` (`ip-menu-return`); la nuova pagina nasce con il menu già aperto (`body.menu-open.menu-instant`) e l'onda si ritira subito, così l'animazione è continua. La voce della pagina corrente ha `aria-current="page"` ed è quella che porta la "targa" dorata.
+- **Accessibilità:** mentre menu o finestra recensioni sono aperti il resto della pagina è `inert`; Esc chiude prima la finestra, poi il menu; il focus torna al pulsante che li ha aperti.
+- **SEO:** `sitemap.xml`, `robots.txt`, titoli/descrizioni unici, canonical, Open Graph e dati strutturati (JSON-LD). Se cambia l'indirizzo del sito, aggiornare questi file.
+
 ## Come vedere il risultato
 
 Serve un server locale (i moduli CSS/JS esterni non si caricano da `file://`):
