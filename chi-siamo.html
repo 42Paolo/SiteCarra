@@ -167,6 +167,8 @@
 /* ---------- animazioni ingresso (fade + salita) — solo al primo viewport ---------- */
 @keyframes chi-rise{ from{ opacity:0; transform:translateY(26px); } to{ opacity:1; transform:translateY(0); } }
 .chi-hero__in{ animation:chi-rise .9s var(--ease) both .15s; }
+/* arrivo dal menu: la scena è già pronta sotto l'onda, che si ritira da sola (niente dissolvenza in contemporanea) */
+.from-menu .chi-hero__in{ animation:none; }
 
 /* ---------- reveal on scroll (sezioni sotto la piega) ---------- */
 .js .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
@@ -199,7 +201,7 @@
 </head>
 
 <body>
-<script>try{var t=+sessionStorage.getItem('ip-menu-return');sessionStorage.removeItem('ip-menu-return');if(t&&Date.now()-t<8000)document.body.classList.add('menu-open','menu-instant')}catch(e){}</script>
+<script>try{var t=+sessionStorage.getItem('ip-menu-return');sessionStorage.removeItem('ip-menu-return');if(t&&Date.now()-t<8000){document.body.classList.add('menu-open','menu-instant');document.documentElement.classList.add('from-menu')}}catch(e){}</script>
 <div class="app">
 
   <!-- ===== BARRA SUPERIORE (stessa identità del sito) ===== -->
