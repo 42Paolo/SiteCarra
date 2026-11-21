@@ -215,6 +215,8 @@ main{ overflow-x:clip; }
   100%{ background-position:-100% 0; }
 }
 .category[data-cat="antipasti"] .dish-block[data-block-idx="1"]{ background-image:url('image/sfondi/bg-antipasti2.webp'); background-size:100% auto; background-position:top center; padding-bottom:64px; }
+/* terzo blocco degli antipasti: la stessa illustrazione, specchiata */
+.category[data-cat="antipasti"] .dish-block[data-block-idx="2"]{ background-image:url('image/sfondi/bg-antipasti2-specchiata.webp'); background-size:100% auto; background-position:top center; padding-bottom:64px; }
 .category[data-cat="primi"]     .dish-block[data-block-idx="1"]{ background-color:var(--bg-base); background-image:url('image/sfondi/bg-primi2.webp'); background-size:100% auto; background-position:center 460px; padding-bottom:520px; }
 .category[data-cat="secondi"]   .dish-block[data-block-idx="0"]{ background-image:url('image/sfondi/bg-secondi.webp'); background-position:center -171px; }
 .category[data-cat="secondi"]   .dish-block[data-block-idx="1"]{ background-image:url('image/sfondi/bg-secondi2.webp'); background-size:100% auto; background-position:top center; background-repeat:no-repeat; overflow:hidden; margin-top:-43px; padding-top:43px; padding-bottom:64px; }
@@ -397,13 +399,15 @@ main{ overflow-x:clip; }
   .category[data-cat="secondi"],
   .category[data-cat="dolci"],
   .category[data-cat="antipasti"] .dish-block[data-block-idx="1"],
+  .category[data-cat="antipasti"] .dish-block[data-block-idx="2"],
   .category[data-cat="primi"]     .dish-block[data-block-idx="1"],
   .category[data-cat="secondi"]   .dish-block[data-block-idx="0"],
   .category[data-cat="secondi"]   .dish-block[data-block-idx="1"]{
     background-image:none;
     background-color:var(--bg-base);
   }
-  .category[data-cat="antipasti"] .dish-block[data-block-idx="1"]{ padding-bottom:0; }
+  .category[data-cat="antipasti"] .dish-block[data-block-idx="1"],
+  .category[data-cat="antipasti"] .dish-block[data-block-idx="2"]{ padding-bottom:0; }
   .category[data-cat="primi"]     .dish-block[data-block-idx="1"]{ padding-bottom:0; }
   .category[data-cat="secondi"]   .dish-block[data-block-idx="1"]{ margin-top:0; padding-top:0; padding-bottom:0; }
   .category[data-cat="dolci"]{ padding-bottom:40px; }
@@ -677,6 +681,9 @@ window.IPMenu = (function(){
       { n:"Svaporata di mare caldo", d:"Calamari e mazzancolle su letto di verdure.", img:"image/piatti/svaporata-di-mare.webp" },
       { n:"Acciughe di Monterosso", d:"Impanate e fritte su letto all'Isolana.", img:"image/piatti/acciughe-monterosso.webp" },
       { n:"Ostriche del Golfo dei Poeti", img:"image/piatti/ostriche-golfo-dei-poeti.webp" },
+      { n:"Gambero Rosso di Mazara del Vallo" },
+      { n:"Gambero Rosa", d:"4€ al pezzo." },
+      { n:"Scampi", d:"7€ al pezzo." },
       { n:"Gran Catalana di crostacei", d:"Con la sua maionese alla curcuma.", premium:true, img:"image/piatti/gran-catalana.webp" },
       { n:"Plateau Royale", premium:true, img:"image/piatti/plateau-royale-2.webp" }
     ],
