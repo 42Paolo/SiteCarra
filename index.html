@@ -362,12 +362,14 @@ main{ overflow-x:clip; }
 .photo-sep--secondi{ background-image:url('image/separatori/dv_5.webp'); }
 .photo-sep--dv6{ background-image:url('image/separatori/dv_6.webp'); }
 .photo-sep--dv9{ background-image:url('image/separatori/dv_9.webp'); }
+.photo-sep--dv11{ background-image:url('image/separatori/dv_11.webp'); }
 /* telefono: versioni a 1400px (bastano fino a ~470px a 3x) — stessa foto, meno byte */
 @media (max-width:767px){
   .photo-sep--antipasti{ background-image:url('image/separatori/dv_10-1400.webp'); }
   .photo-sep--secondi{ background-image:url('image/separatori/dv_5-1400.webp'); }
   .photo-sep--dv6{ background-image:url('image/separatori/dv_6-1400.webp'); }
   .photo-sep--dv9{ background-image:url('image/separatori/dv_9-1400.webp'); }
+  .photo-sep--dv11{ background-image:url('image/separatori/dv_11-1400.webp'); }
 }/* separatore foto INLINE (dentro la lista piatti) — sborda a tutta larghezza, flush */
 .photo-sep--inline{ width:calc(100% + 2*var(--pad)); margin:25px calc(-1*var(--pad)); }
 /* sezioni adiacenti ai separatori-foto: nessun padding verso la foto (niente spazio) */
@@ -727,6 +729,8 @@ window.IPMenu = (function(){
   var BLOCK_SIZES = { secondi: 4 };
   /* separatore inline FOTO per categoria (invece dell'onda): classe modificatrice */
   var INLINE_PHOTO = { antipasti: 'photo-sep--dv6', primi: 'photo-sep--dv9' };
+  /* separatori diversi dal predefinito, per posizione (indice del blocco che precede il separatore) */
+  var INLINE_PHOTO_AT = { antipasti: { 1: 'photo-sep--dv11' } };   /* Ostriche -> Gambero Rosso: arco di Porto Venere */
 
   function esc(s){
     return String(s).replace(/[&<>"]/g, function(c){
@@ -825,7 +829,7 @@ window.IPMenu = (function(){
       html += blockHTML(b, catId);
       html += '</div>';
       if(idx < blocks.length - 1 || premium.length){
-        var inlineCls = INLINE_PHOTO[catId];
+        var inlineCls = (INLINE_PHOTO_AT[catId] && INLINE_PHOTO_AT[catId][idx]) || INLINE_PHOTO[catId];
         html += inlineCls
           ? '<div class="photo-sep photo-sep--inline '+inlineCls+'" aria-hidden="true" data-lazy></div>'
           : inlineSeparatorHTML();
