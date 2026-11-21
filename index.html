@@ -285,7 +285,7 @@ main{ overflow-x:clip; }
 /* ============================================================
    SEZIONE IN EVIDENZA — i piatti più importanti del menu (premium:true nel MENU):
    Gran Catalana di crostacei e Plateau Royale. Un blocco più alto e arioso, un piatto per volta,
-   centrato e grande, con titolo e ingredienti sotto.
+   centrato e grande su telefono e tablet (piatto, titolo e ingredienti sotto); su desktop come gli altri piatti.
    SFONDO: image/sfondi/bg-premium.webp (disegno a china: fondale con coralli, polpo e gambero). Per cambiarlo basta
    sostituire quel file o modificare background-image in .dish-block--premium (si carica da solo solo
    quando serve, grazie a data-lazy).
@@ -297,8 +297,28 @@ main{ overflow-x:clip; }
   background-repeat:no-repeat; background-size:cover; background-position:center;
   background-color:var(--bg-base);
 }
-@media (min-width:768px){
-  /* il disegno è verticale (793x1984): su schermi larghi resta una colonna centrale,
+/* Telefono e tablet (< 1024px): i due piatti uno sotto l'altro, centrati e grandi (piatto, poi titolo e ingredienti).
+   Da 1024px in su la sezione usa lo STESSO layout di tutti gli altri piatti (una schermata per piatto, foto e testo
+   affiancati e alternati): niente regole qui sotto. */
+@media (max-width:1023px){
+  .dish-block--premium .dishes{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:0; }
+  .dish-block--premium .dishes__col{ display:contents; }
+  /* ordine: foto 1, testo 1, foto 2, testo 2 */
+  .dish-block--premium .dishes__col--left  > :nth-child(1){ order:1; }
+  .dish-block--premium .dishes__col--right > :nth-child(1){ order:2; }
+  .dish-block--premium .dishes__col--right > :nth-child(2){ order:3; margin-top:88px; }
+  .dish-block--premium .dishes__col--left  > :nth-child(2){ order:4; }
+  /* Plateau Royale (secondo piatto): 105px più in basso, solo spostamento visivo */
+  .dish-block--premium .dishes__col--right > :nth-child(2),
+  .dish-block--premium .dishes__col--left  > :nth-child(2){ position:relative; top:105px; }
+  .dish-block--premium .plate-block{ width:min(88vw, 520px); margin-left:auto; margin-right:auto; align-self:center; height:auto; }
+  .dish-block--premium .plate{ width:100%; height:auto; aspect-ratio:1/1; border-radius:50%; }
+  .dish-block--premium .text-block{ width:100%; max-width:34ch; margin:22px auto 0; align-self:center; }
+  .dish-block--premium .dish__name{ font-size:clamp(1.7rem, 7.4vw, 2.3rem); margin-bottom:10px; }
+  .dish-block--premium .dish__desc{ font-size:15px; max-width:none; margin:0 auto; }
+}
+@media (min-width:768px) and (max-width:1023px){
+  /* il disegno è verticale (793x1984): sul tablet resta una colonna centrale,
      con i bordi che sfumano nel fondo della pagina */
   .category .dish-block--premium{
     width:min(100%, 860px); margin-left:auto; margin-right:auto;
@@ -309,21 +329,9 @@ main{ overflow-x:clip; }
             mask-image:linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
   }
 }
-.premium-dish{ display:flex; flex-direction:column; align-items:center; text-align:center; }
-.premium-dish + .premium-dish{ margin-top:88px; }
-.premium-dish + .premium-dish{ position:relative; top:105px; }   /* Plateau Royale: 105px più in basso (solo spostamento visivo, il resto non si muove) */
-.premium-dish .plate-block{ width:min(88vw, 520px); margin:0 auto; align-self:center; height:auto; }
-.premium-dish .plate{ width:100%; height:auto; aspect-ratio:1/1; border-radius:50%; }
-.premium-dish .text-block{ width:100%; max-width:34ch; margin-top:22px; align-self:center; }
-.premium-dish .dish__kicker{ margin-left:auto; margin-right:auto; }
-.premium-dish .dish__name{ font-size:clamp(1.7rem, 7.4vw, 2.3rem); margin-bottom:10px; }
-.premium-dish .dish__desc{ font-size:15px; max-width:none; margin:0 auto; }
 @media (min-width:1024px){
-  .premium-dish + .premium-dish{ margin-top:80px; }
-  .premium-dish .plate-block{ width:min(460px, 100%); }
-  .premium-dish .text-block{ max-width:46ch; margin-top:36px; }
-  .premium-dish .dish__name{ font-size:3.2rem; margin-bottom:18px; }
-  .premium-dish .dish__desc{ font-size:17px; }
+  .dish-block--premium{ padding-top:40px; padding-bottom:120px; }
+}
 }
 
 /* ============================================================
@@ -721,7 +729,7 @@ window.IPMenu = (function(){
       var eager = eagerImgs > 0; if(eager) eagerImgs--;
       var small = d.img.replace(/\.webp$/, '-450.webp');
       inner = '<div class="plate plate--photo"><img src="'+esc(d.img)+'" srcset="'+esc(small)+' 450w, '+esc(d.img)+' 900w"'
-        + ' sizes="'+(side === 'center' ? '(min-width:1024px) 640px, 88vw' : '(min-width:1024px) 440px, 45vw')+'" width="900" height="900" alt="'+esc(d.n)+'" decoding="async"'
+        + ' sizes="'+(d.premium ? '(min-width:1024px) 440px, 88vw' : '(min-width:1024px) 440px, 45vw')+'" width="900" height="900" alt="'+esc(d.n)+'" decoding="async"'
         + (eager ? ' fetchpriority="high"' : ' loading="lazy"') + ' /></div>';
     } else {
       inner = '<div class="plate"><span class="plate__label">Foto piatto</span></div>';
@@ -785,11 +793,8 @@ window.IPMenu = (function(){
   /* sezione "in evidenza" (premium:true nel MENU): i piatti di punta, uno per volta, centrati e grandi,
      in un blocco più alto con spazio per uno sfondo dedicato (vedi .dish-block--premium nel CSS). */
   function premiumHTML(list, catId, idx){
-    var html = '<div class="dish-block dish-block--premium" data-block-idx="'+idx+'" data-lazy>';
-    list.forEach(function(d){
-      html += '<div class="premium-dish">' + plateHTML('center', d) + textHTML(d, catId) + '</div>';
-    });
-    return html + '</div>';
+    return '<div class="dish-block dish-block--premium" data-block-idx="'+idx+'" data-lazy>'
+      + blockHTML(list, catId) + '</div>';
   }
 
   function renderCategory(catId){
