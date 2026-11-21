@@ -215,8 +215,13 @@ main{ overflow-x:clip; }
   100%{ background-position:-100% 0; }
 }
 .category[data-cat="antipasti"] .dish-block[data-block-idx="1"]{ background-image:url('image/sfondi/bg-antipasti2.webp'); background-size:100% auto; background-position:top center; padding-bottom:64px; }
-/* terzo blocco degli antipasti: la stessa illustrazione, specchiata */
-.category[data-cat="antipasti"] .dish-block[data-block-idx="2"]{ background-image:url('image/sfondi/bg-antipasti2-specchiata.webp'); background-size:100% auto; background-position:top center; padding-bottom:64px; }
+/* terzo blocco degli antipasti (Gambero Rosso, Gambero Rosa, Scampi): sfondo con la razza, ancorato in basso
+   (se il blocco è più basso del disegno si taglia in alto). Lo spazio sotto l'ultimo piatto lascia vedere la razza
+   a destra, sotto gli Scampi: la razza occupa dal 65% al 78% dell'altezza del disegno (2,5 volte la larghezza). */
+.category[data-cat="antipasti"] .dish-block[data-block-idx="2"]{
+  background-image:url('image/sfondi/bg-gamberi.webp'); background-size:100% auto; background-position:bottom center;
+  padding-bottom:calc(0.89 * min(100vw, 480px) + 24px);
+}
 .category[data-cat="primi"]     .dish-block[data-block-idx="1"]{ background-color:var(--bg-base); background-image:url('image/sfondi/bg-primi2.webp'); background-size:100% auto; background-position:center 460px; padding-bottom:520px; }
 .category[data-cat="secondi"]   .dish-block[data-block-idx="0"]{ background-image:url('image/sfondi/bg-secondi.webp'); background-position:center -171px; }
 .category[data-cat="secondi"]   .dish-block[data-block-idx="1"]{ background-image:url('image/sfondi/bg-secondi2.webp'); background-size:100% auto; background-position:top center; background-repeat:no-repeat; overflow:hidden; margin-top:-43px; padding-top:43px; padding-bottom:64px; }
