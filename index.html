@@ -283,6 +283,36 @@ main{ overflow-x:clip; }
 .plate-block:hover .plate--photo{ box-shadow:none; }
 
 /* ============================================================
+   SEZIONE IN EVIDENZA — i piatti più importanti del menu (premium:true nel MENU):
+   Gran Catalana di crostacei e Plateau Royale. Un blocco più alto e arioso, un piatto per volta,
+   centrato e grande, con titolo e ingredienti sotto.
+   SFONDO DEDICATO: basta aggiungere qui sotto, in .dish-block--premium, ad esempio
+     background-image:url('image/sfondi/bg-premium.webp'); background-size:cover; background-position:center;
+   (l'immagine si carica da sola solo quando serve, grazie a data-lazy).
+   ============================================================ */
+.dish-block--premium{
+  position:relative;
+  padding-top:72px; padding-bottom:96px;
+  background-repeat:no-repeat; background-size:cover; background-position:center;
+}
+.premium-dish{ display:flex; flex-direction:column; align-items:center; text-align:center; }
+.premium-dish + .premium-dish{ margin-top:88px; }
+.premium-dish .plate-block{ width:min(88vw, 520px); margin:0 auto; align-self:center; height:auto; }
+.premium-dish .plate{ width:100%; height:auto; aspect-ratio:1/1; border-radius:50%; }
+.premium-dish .text-block{ width:100%; max-width:34ch; margin-top:22px; align-self:center; }
+.premium-dish .dish__kicker{ margin-left:auto; margin-right:auto; }
+.premium-dish .dish__name{ font-size:clamp(1.7rem, 7.4vw, 2.3rem); margin-bottom:10px; }
+.premium-dish .dish__desc{ font-size:15px; max-width:none; margin:0 auto; }
+@media (min-width:1024px){
+  .dish-block--premium{ padding-top:96px; padding-bottom:140px; }
+  .premium-dish + .premium-dish{ margin-top:140px; }
+  .premium-dish .plate-block{ width:min(640px, 100%); }
+  .premium-dish .text-block{ max-width:46ch; margin-top:36px; }
+  .premium-dish .dish__name{ font-size:3.2rem; margin-bottom:18px; }
+  .premium-dish .dish__desc{ font-size:17px; }
+}
+
+/* ============================================================
    SEPARATORE — onde full-width
    ============================================================ */
 .separator{ position:relative; height:128px; overflow:hidden;
@@ -621,9 +651,9 @@ window.IPMenu = (function(){
       { n:"Polpo alla ligure", d:"Polpo, patate, fagiolini al vapore, olive taggiasche, pesto di Portovenere." },
       { n:"Svaporata di mare caldo", d:"Calamari e mazzancolle su letto di verdure.", img:"image/piatti/svaporata-di-mare.webp" },
       { n:"Acciughe di Monterosso", d:"Impanate e fritte su letto all'Isolana.", img:"image/piatti/acciughe-monterosso.webp" },
-      { n:"Gran Catalana di crostacei", d:"Con la sua maionese alla curcuma.", img:"image/piatti/gran-catalana.webp" },
       { n:"Ostriche del Golfo dei Poeti", img:"image/piatti/ostriche-golfo-dei-poeti.webp" },
-      { n:"Plateau Royale", feature:true, img:"image/piatti/plateau-royale-2.webp" }
+      { n:"Gran Catalana di crostacei", d:"Con la sua maionese alla curcuma.", premium:true, img:"image/piatti/gran-catalana.webp" },
+      { n:"Plateau Royale", premium:true, img:"image/piatti/plateau-royale-2.webp" }
     ],
     primi: [
       { n:"Linguine Vongole veraci e Bottarga", d:"Bottarga tagliata a coltello.", img:"image/piatti/linguine-vongole.webp" },
@@ -677,7 +707,7 @@ window.IPMenu = (function(){
       var eager = eagerImgs > 0; if(eager) eagerImgs--;
       var small = d.img.replace(/\.webp$/, '-450.webp');
       inner = '<div class="plate plate--photo"><img src="'+esc(d.img)+'" srcset="'+esc(small)+' 450w, '+esc(d.img)+' 900w"'
-        + ' sizes="(min-width:1024px) 440px, 45vw" width="900" height="900" alt="'+esc(d.n)+'" decoding="async"'
+        + ' sizes="'+(side === 'center' ? '(min-width:1024px) 640px, 88vw' : '(min-width:1024px) 440px, 45vw')+'" width="900" height="900" alt="'+esc(d.n)+'" decoding="async"'
         + (eager ? ' fetchpriority="high"' : ' loading="lazy"') + ' /></div>';
     } else {
       inner = '<div class="plate"><span class="plate__label">Foto piatto</span></div>';
@@ -738,23 +768,36 @@ window.IPMenu = (function(){
       + '</div>';
   }
 
+  /* sezione "in evidenza" (premium:true nel MENU): i piatti di punta, uno per volta, centrati e grandi,
+     in un blocco più alto con spazio per uno sfondo dedicato (vedi .dish-block--premium nel CSS). */
+  function premiumHTML(list, catId, idx){
+    var html = '<div class="dish-block dish-block--premium" data-block-idx="'+idx+'" data-lazy>';
+    list.forEach(function(d){
+      html += '<div class="premium-dish">' + plateHTML('center', d) + textHTML(d, catId) + '</div>';
+    });
+    return html + '</div>';
+  }
+
   function renderCategory(catId){
     var host = document.querySelector('.dish-list[data-cat="'+catId+'"]');
     var data = MENU[catId];
     if(!host || !data) return;
-    var blocks = chunk(data, catId);
+    var normal  = data.filter(function(d){ return !d.premium; });
+    var premium = data.filter(function(d){ return d.premium; });
+    var blocks = chunk(normal, catId);
     var html = '';
     blocks.forEach(function(b, idx){
       html += '<div class="dish-block" data-block-idx="'+idx+'" data-lazy>';
       html += blockHTML(b, catId);
       html += '</div>';
-      if(idx < blocks.length - 1){
+      if(idx < blocks.length - 1 || premium.length){
         var inlineCls = INLINE_PHOTO[catId];
         html += inlineCls
           ? '<div class="photo-sep photo-sep--inline '+inlineCls+'" aria-hidden="true" data-lazy></div>'
           : inlineSeparatorHTML();
       }
     });
+    if(premium.length){ html += premiumHTML(premium, catId, blocks.length); }
     host.innerHTML = html;
   }
 
