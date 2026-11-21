@@ -215,13 +215,13 @@ main{ overflow-x:clip; }
   100%{ background-position:-100% 0; }
 }
 .category[data-cat="antipasti"] .dish-block[data-block-idx="1"]{ background-image:url('image/sfondi/bg-antipasti2.webp'); background-size:100% auto; background-position:top center; padding-bottom:64px; }
-/* terzo blocco degli antipasti (Gambero Rosso, Gambero Rosa, Scampi): sfondo con la razza, a destra sotto gli Scampi.
-   Il disegno (alto 2,5 volte la larghezza) è spinto verso il basso di 0,26 volte la larghezza, così si taglia la parte
-   vuota in fondo; lo spazio dopo l'ultimo piatto serve solo a lasciare vedere la razza (che parte al 65% del disegno). */
+/* terzo blocco degli antipasti (Gambero Rosso, Gambero Rosa, Scampi): sfondo con le razze. Il disegno (alto 2,5 volte la
+   larghezza) è ancorato in alto e salito di 0,49 volte la larghezza, così la razza grande (che nel disegno parte al 30%)
+   cade subito sotto il titolo "Gambero Rosso di Mazara del Vallo". Il blocco finisce in fondo ai piatti, senza spazio sotto. */
 .category[data-cat="antipasti"] .dish-block[data-block-idx="2"]{
-  background-image:url('image/sfondi/bg-gamberi.webp'); background-size:100% auto;
-  background-position:center calc(100% + 0.26 * min(100vw, 480px));
-  padding-bottom:calc(0.60 * min(100vw, 480px));
+  background-image:url('image/sfondi/bg-gamberi.webp?v=20261121b'); background-size:100% auto;
+  background-position:center calc(-0.49 * min(100vw, 480px));
+  padding-bottom:0;
 }
 .category[data-cat="primi"]     .dish-block[data-block-idx="1"]{ background-color:var(--bg-base); background-image:url('image/sfondi/bg-primi2.webp'); background-size:100% auto; background-position:center 460px; padding-bottom:520px; }
 .category[data-cat="secondi"]   .dish-block[data-block-idx="0"]{ background-image:url('image/sfondi/bg-secondi.webp'); background-position:center -171px; }
