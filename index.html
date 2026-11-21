@@ -859,7 +859,6 @@ window.IPMenu = (function(){
   </header>
 
   <nav class="side-nav" aria-label="Categorie del menu">
-    <a class="side-link" href="#top" data-target="home">Home</a>
     <a class="side-link is-active" href="#antipasti" data-target="antipasti">Antipasti</a>
     <a class="side-link" href="#primi" data-target="primi">Primi</a>
     <a class="side-link" href="#secondi" data-target="secondi">Secondi</a>
@@ -1113,12 +1112,10 @@ window.IPMenu = (function(){
   });
 
   /* click sidebar (solo desktop, ma innocuo anche se presente nel DOM su
-     mobile): "home" torna in cima alla pagina, le altre voci scrollano
-     alla categoria come le tab. */
+     mobile): le voci scrollano alla categoria come le tab. */
   sideLinks.forEach(function(link){
     link.addEventListener('click', function(e){
       e.preventDefault();
-      if(link.dataset.target === 'home'){ window.scrollTo({ top:0, behavior:smooth() }); return; }
       var sec = document.getElementById(link.dataset.target);
       if(sec) sec.scrollIntoView({ behavior:smooth(), block:'start' });
     });
