@@ -286,25 +286,25 @@ main{ overflow-x:clip; }
    SEZIONE IN EVIDENZA — i piatti più importanti del menu (premium:true nel MENU):
    Gran Catalana di crostacei e Plateau Royale. Un blocco più alto e arioso, un piatto per volta,
    centrato e grande, con titolo e ingredienti sotto.
-   SFONDO: image/sfondi/bg-premium.webp (disegno a china con cornice di coralli). Per cambiarlo basta
+   SFONDO: image/sfondi/bg-premium.webp (disegno a china: fondale con coralli, polpo e gambero). Per cambiarlo basta
    sostituire quel file o modificare background-image in .dish-block--premium (si carica da solo solo
    quando serve, grazie a data-lazy).
    ============================================================ */
 .dish-block--premium{
   position:relative;
-  padding-top:150px; padding-bottom:350px;      /* l'arco in alto e le rocce in basso restano liberi */
+  padding-top:100px; padding-bottom:350px;      /* in basso polpo e gambero restano liberi */
   background-image:url('image/sfondi/bg-premium.webp');
   background-repeat:no-repeat; background-size:cover; background-position:center;
   background-color:var(--bg-base);
 }
 @media (min-width:768px){
-  /* il disegno è una cornice verticale (793x1984): su schermi larghi resta una colonna centrale,
+  /* il disegno è verticale (793x1984): su schermi larghi resta una colonna centrale,
      con i bordi che sfumano nel fondo della pagina */
   .category .dish-block--premium{
     width:min(100%, 860px); margin-left:auto; margin-right:auto;
     padding-left:0; padding-right:0;
     aspect-ratio:793 / 1984;
-    padding-top:min(300px, 36vw); padding-bottom:min(560px, 66vw);
+    padding-top:min(200px, 24vw); padding-bottom:min(560px, 66vw);
     -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
             mask-image:linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
   }
