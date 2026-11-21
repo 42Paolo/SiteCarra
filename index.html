@@ -733,7 +733,11 @@ window.IPMenu = (function(){
   /* separatore inline FOTO per categoria (invece dell'onda): classe modificatrice */
   var INLINE_PHOTO = { antipasti: 'photo-sep--dv6', primi: 'photo-sep--dv9' };
   /* separatori diversi dal predefinito, per posizione (indice del blocco che precede il separatore) */
-  var INLINE_PHOTO_AT = { antipasti: { 1: 'photo-sep--dv11', 2: 'photo-sep--dv12' } };   /* 1: Ostriche -> Gambero Rosso (arco); 2: Scampi -> Gran Catalana (chiesa di San Pietro) */
+  var INLINE_PHOTO_AT = { antipasti: { 2: 'photo-sep--dv12' } };   /* 2: Scampi -> Gran Catalana (chiesa di San Pietro) */
+  /* nessun separatore dopo questi blocchi (Ostriche -> Gambero Rosso: i due blocchi sono attaccati) */
+  var NO_SEP_AFTER = { antipasti: { 1: true } };
+  /* blocchi con foto e testo scambiati di lato (Gambero Rosso, Gambero Rosa, Scampi) */
+  var FLIP_BLOCK = { antipasti: { 2: true } };
 
   function esc(s){
     return String(s).replace(/[&<>"]/g, function(c){
@@ -800,10 +804,10 @@ window.IPMenu = (function(){
        • indice locale PARI    -> foto a SINISTRA, testo a DESTRA
        • indice locale DISPARI -> testo a SINISTRA, foto a DESTRA (specchiato)
      Le colonne restano bilanciate (stesso n. di elementi) e #foto == #piatti. */
-  function blockHTML(dishes, catId){
+  function blockHTML(dishes, catId, flip){
     var left = [], right = [];
     dishes.forEach(function(d, i){
-      if(i % 2 === 0){ left.push(plateHTML('left', d));  right.push(textHTML(d, catId)); }
+      if((i % 2 === 0) !== !!flip){ left.push(plateHTML('left', d));  right.push(textHTML(d, catId)); }
       else           { left.push(textHTML(d, catId)); right.push(plateHTML('right', d)); }
     });
     return '<div class="dishes">'
@@ -829,9 +833,9 @@ window.IPMenu = (function(){
     var html = '';
     blocks.forEach(function(b, idx){
       html += '<div class="dish-block" data-block-idx="'+idx+'" data-lazy>';
-      html += blockHTML(b, catId);
+      html += blockHTML(b, catId, FLIP_BLOCK[catId] && FLIP_BLOCK[catId][idx]);
       html += '</div>';
-      if(idx < blocks.length - 1 || premium.length){
+      if((idx < blocks.length - 1 || premium.length) && !(NO_SEP_AFTER[catId] && NO_SEP_AFTER[catId][idx])){
         var inlineCls = (INLINE_PHOTO_AT[catId] && INLINE_PHOTO_AT[catId][idx]) || INLINE_PHOTO[catId];
         html += inlineCls
           ? '<div class="photo-sep photo-sep--inline '+inlineCls+'" aria-hidden="true" data-lazy></div>'
