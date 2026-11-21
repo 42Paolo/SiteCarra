@@ -366,6 +366,8 @@ main{ overflow-x:clip; }
 .category[data-cat="antipasti"]{ padding-bottom:0; }
 .category[data-cat="secondi"]{ padding-bottom:0; }
 .photo-sep + .category{ padding-top:0; }
+/* la foto di Porto Venere dopo gli antipasti è attaccata alla sezione Gran Catalana / Plateau Royale: niente striscia in mezzo */
+.category[data-cat="antipasti"] + .photo-sep{ margin-top:0; }
 
 /* ============================================================
    Reveal animato (solo se JS attivo)
