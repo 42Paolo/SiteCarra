@@ -226,15 +226,15 @@ body.menu-open .menu-overlay__skyline{ opacity:1; transition-delay:.32s; }
   padding:12px 0 8px;
 }
 .ov-link{
-  font:600 18px/1.15 var(--sans);
-  letter-spacing:.20em;
+  font:700 28px/1.15 'Cormorant Garamond', Georgia, serif;   /* stesso carattere del menu su telefono */
+  letter-spacing:.09em;
   text-transform:uppercase;
   color:var(--navy);
   padding:10px 22px;
   transition:color .2s ease;
 }
 .ov-link:hover,.ov-link--gold{ color:var(--gold-line); }
-.ov-link__ico{ width:15px; height:15px; margin-right:8px; vertical-align:-2px; color:var(--gold-line); }
+.ov-link__ico{ width:22px; height:22px; margin-right:10px; vertical-align:-3px; color:var(--gold-line); }
 .menu-overlay__social{ display:flex; gap:16px; margin-top:auto; padding-top:24px; }
 
 /* ---- rivelazione coreografata dei contenuti (stagger DOPO il passaggio dell'onda) ---- */

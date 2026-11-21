@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,500;1,600&family=Inter:wght@300;400;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/base.css?v=20261121a" />
+<link rel="stylesheet" href="css/base.css?v=20261121b" />
 
 <style>
 /* ============================================================
@@ -330,7 +330,8 @@ main{ overflow-x:clip; }
   }
 }
 @media (min-width:1024px){
-  .dish-block--premium{ padding-top:40px; padding-bottom:120px; }
+  /* desktop: nessuno sfondo dedicato, la sezione è identica agli altri piatti */
+  .dish-block--premium{ background-image:none; background-color:transparent; padding-top:0; padding-bottom:0; }
 }
 }
 
@@ -508,9 +509,9 @@ main{ overflow-x:clip; }
   }
   .side-link{
     display:block;
-    font:600 13px/1 var(--sans); letter-spacing:.2em; text-transform:uppercase;
+    font:700 19px/1 'Cormorant Garamond', Georgia, serif; letter-spacing:.12em; text-transform:uppercase;   /* stesso carattere del menu di navigazione */
     color:var(--ink-soft);
-    padding:15px 0 15px 18px;
+    padding:12px 0 12px 18px;
     border-left:2px solid transparent;
     transition:color .2s ease, border-color .2s ease;
   }
@@ -1008,7 +1009,7 @@ window.IPMenu = (function(){
 
 </div>
 
-<script src="js/overlay.js?v=20261121a"></script>
+<script src="js/overlay.js?v=20261121b"></script>
 <script>
 /* ============================================================
    IN PIAZZA — pagina MENU: comportamenti specifici
