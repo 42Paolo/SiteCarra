@@ -1150,5 +1150,29 @@ window.IPMenu = (function(){
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ setSizes(); updateInk(activeTabEl()); }); }
 })();
 </script>
+<script>
+/* Il link "Chi Siamo" deve stare al centro del cartiglio della piovra (sfondo del secondo blocco dei Primi,
+   image/sfondi/bg-primi2.webp, 656x1642, cartiglio centrato al 91,3% dell'altezza). Lo sfondo è ancorato in alto al blocco,
+   il link segue invece il fondo del blocco: se i piatti cambiano altezza i due si sfasano. Qui il margine del link si
+   ricalcola da quello che c'è davvero sulla pagina (telefono; su tablet/desktop lo sfondo non c'è). */
+(function(){
+  'use strict';
+  var IMG_RATIO = 1642 / 656, CENTER = 1500 / 1642, BG_Y = 460;
+  function place(){
+    var cta = document.querySelector('.primi-cta');
+    var blk = document.querySelector('.category[data-cat="primi"] .dish-block[data-block-idx="1"]');
+    if(!cta || !blk) return;
+    if(!window.matchMedia('(max-width:767px)').matches || !blk.clientWidth){ cta.style.marginTop = ''; return; }   /* lo sfondo c'è solo sul telefono */
+    var target = BG_Y + CENTER * blk.clientWidth * IMG_RATIO;      /* centro del cartiglio, dall'alto del blocco */
+    cta.style.marginTop = Math.round(target - blk.offsetHeight - cta.offsetHeight / 2) + 'px';
+  }
+  var queued = false;
+  function queue(){ if(queued) return; queued = true; requestAnimationFrame(function(){ queued = false; place(); }); }
+  place();
+  window.addEventListener('load', queue);
+  window.addEventListener('resize', queue);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(queue);
+})();
+</script>
 </body>
 </html>
