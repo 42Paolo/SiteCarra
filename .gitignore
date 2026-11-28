@@ -4,3 +4,6 @@
 # Editor / tooling locale
 .claude/
 .vscode/
+
+# Foto sostituite (archivio locale, non va online)
+foto-vecchie/
