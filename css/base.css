@@ -136,7 +136,9 @@ img{ max-width:100%; display:block; }
    ============================================================ */
 .site-footer{ text-align:center; color:var(--navy); padding:42px var(--pad) 52px; }
 .footer__fish{ width:84px; height:auto; margin:0 auto 12px; color:var(--navy); }
-.footer__name{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:1.7rem; margin:0 0 8px; }
+.logo--foot{ --foot-logo-h:min(110px, 33vw); margin:0 auto calc(var(--foot-logo-h) * .62 + 6px); }   /* spazio per la stella che scende sotto le scritte */
+.logo--foot .logo-mark{ --logo-h:110px; }
+.logo--foot .logo-mark::before{ left:38.151%; top:98%; width:23.698%; height:59.628%; }   /* stella sotto, come nel menu */
 .footer__line{ margin:3px 0; font-size:12px; font-weight:300; letter-spacing:.02em; color:var(--ink); }
 .footer__social{ display:flex; justify-content:center; gap:14px; margin-top:18px; }
 .social-dot{ width:38px; height:38px; border-radius:50%; display:grid; place-items:center; border:1.5px solid var(--navy); color:var(--navy); font-size:14px; }
